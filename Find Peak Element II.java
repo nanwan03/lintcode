@@ -5,39 +5,68 @@ class Solution {
      */
     public List<Integer> findPeakII(int[][] A) {
         // write your code here
-    	List<Integer> rst = new ArrayList<Integer>(2);
     	if (A == null || A.length == 0 || A[0].length == 0) {
-    		return rst;
+    		return new ArrayList<Integer>(2);
     	}
-    	int row = A.length;
-    	int col = A[0].length;
-    	int startX = 1;
-    	int startY = col / 2;
-    	while (startX >= 0 && startX < row && startY >= 0 && startY < col) {
-    	    startX = findPeakRow(A, 0, row - 1, startY);
-    	    if (startY - 1 >= 0 && A[startX][startY - 1] > A[startX][startY]) {
-    	            startY--;
-    	    } else if (startY + 1 < col && A[startX][startY + 1] > A[startX][startY]) {
-    	        startY++;
-    	    } else {
-    	        rst.add(startX);
-    	        rst.add(startY);
-    	        return rst;
-    	    }
-    	}
-    	return rst;
+    	return helper(A, 0, A.length - 1, 0, A[0].length - 1);
     }
-    public static int findPeakRow(int[][] A, int start, int end, int col) {
-    	while (start + 1 < end) {
-    		int mid = start + (end - start) / 2;
-    		if (A[mid - 1][col] < A[mid][col] && A[mid + 1][col] < A[mid][col]) {
-    			return mid;
-    		} else if (A[mid][col] < A[mid - 1][col]) {
-    			end = mid;
-    		} else {
-    			start = mid;
-    		}
-    	}
-    	return A[start][col] > A[end][col] ? start : end;
+    private List<Integer> helper(int[][] A, int rStart, int rEnd, int cStart, int cEnd) {
+        List<Integer> rst = new ArrayList<Integer>(2);
+        int row = rEnd - rStart + 1;
+        int col = cEnd - cStart + 1;
+        if (row == 1 && col == 1) {
+            rst.add(rStart);
+            rst.add(rEnd);
+            return rst;
+        }
+        int targetR = -1;
+        int targetC = -1;
+        int max = Integer.MIN_VALUE;
+        if (row > col) {
+            int midRow = rStart + (rEnd - rStart) / 2;
+            for (int i = Math.max(rStart, midRow - 1); i <= Math.min(rEnd, midRow + 1); i++) {
+                for (int j = cStart; j <= cEnd; j++) {
+                    if (A[i][j] > max) {
+                        max = A[i][j];
+                        targetR = i;
+                        targetC = j;
+                    }
+                }
+            }
+            if (targetR == midRow) {
+                rst.add(targetR);
+                rst.add(targetC);
+                return rst;
+            } else {
+                if (targetR < midRow) {
+                    return helper(A, rStart, midRow, cStart, cEnd);
+                } else {
+                    return helper(A, midRow, rEnd, cStart, cEnd);
+                }
+            }
+        } else {
+            int midCol = cStart + (cEnd - cStart) / 2;
+            for (int i = rStart; i <= rEnd; i++) {
+                for (int j = Math.max(cStart, midCol - 1); j <= Math.min(cEnd, midCol + 1); j++) {
+                    if (A[i][j] > max) {
+                        max = A[i][j];
+                        targetR = i;
+                        targetC = j;
+                    }
+                }
+            }
+            if (targetC == midCol) {
+                rst.add(targetR);
+                rst.add(targetC);
+                return rst;
+            } else {
+                if (targetC < midCol) {
+                    return helper(A, rStart, rEnd, cStart, midCol);
+                } else {
+                    return helper(A, rStart, rEnd, midCol, cEnd);
+                }
+            }
+        }
     }
 }
+
