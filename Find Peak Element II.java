@@ -12,19 +12,18 @@ class Solution {
     	int row = A.length;
     	int col = A[0].length;
     	int startX = 1;
-    	int startY = 1;
-    	while (startX <= row - 1 && startY <= col - 1) {
-    		int cur = A[startX][startY];
-    		if (correctPeak(A, startX, startY, row, col)) {
-    			rst.add(startX);
-    			rst.add(startY);
-    			return rst;
-    		}
-    		if ((startX + 1 <= row - 1 && cur < A[startX + 1][startY]) || (startX - 1 >= 1 && cur < A[startX - 1][startY])){
-    			startX = findPeakRow(A, 1, row - 1, startY);
-    		} else if ((startY + 1 <= col - 1 && cur < A[startX][startY + 1]) || (startY - 1 >= 1 && cur < A[startX][startY - 1])){
-    			startY = findPeakCol(A, 1, col - 1, startX);
-    		} 
+    	int startY = col / 2;
+    	while (startX >= 0 && startX < row && startY >= 0 && startY < col) {
+    	    startX = findPeakRow(A, 0, row - 1, startY);
+    	    if (startY - 1 >= 0 && A[startX][startY - 1] > A[startX][startY]) {
+    	            startY--;
+    	    } else if (startY + 1 < col && A[startX][startY + 1] > A[startX][startY]) {
+    	        startY++;
+    	    } else {
+    	        rst.add(startX);
+    	        rst.add(startY);
+    	        return rst;
+    	    }
     	}
     	return rst;
     }
@@ -41,25 +40,4 @@ class Solution {
     	}
     	return A[start][col] > A[end][col] ? start : end;
     }
-    public static int findPeakCol(int[][] A, int start, int end, int row) {
-    	while (start + 1 < end) {
-    		int mid = start + (end - start) / 2;
-    		if (A[row][mid - 1] < A[row][mid] && A[row][mid + 1] < A[row][mid]) {
-    			return mid;
-    		} else if (A[row][mid] < A[row][mid - 1]) {
-    			end = mid; 
-    		} else {
-    			start = mid;
-    		}
-    	}
-    	return A[row][start] > A[row][end] ? start : end;
-    }
-    public static boolean correctPeak(int[][] arr, int row, int col, int N, int M) {
-        if(row-1>=0 && arr[row-1][col]>arr[row][col])  return false;
-        if(row+1<N && arr[row+1][col]>arr[row][col])   return false;
-        if(col-1>=0 && arr[row][col-1]>arr[row][col])  return false;
-        if(col+1<M && arr[row][col+1]>arr[row][col])   return false;
-        return true;
-    }
 }
-
