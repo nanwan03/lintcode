@@ -20,10 +20,10 @@ class Solution {
     			rst.add(startY);
     			return rst;
     		}
-    		if (startX + 1 <= row - 1 && cur < A[startX + 1][startY]) {
-    			startX = findPeakRow(A, startX, row - 1, startY);
-    		} else if (startY + 1 <= col - 1 && cur < A[startX][startY + 1]) {
-    			startY = findPeakCol(A, startY, col - 1, startX);
+    		if ((startX + 1 <= row - 1 && cur < A[startX + 1][startY]) || (startX - 1 >= 1 && cur < A[startX - 1][startY])){
+    			startX = findPeakRow(A, 1, row - 1, startY);
+    		} else if ((startY + 1 <= col - 1 && cur < A[startX][startY + 1]) || (startY - 1 >= 1 && cur < A[startX][startY - 1])){
+    			startY = findPeakCol(A, 1, col - 1, startX);
     		} 
     	}
     	return rst;
