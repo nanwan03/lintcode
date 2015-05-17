@@ -15,8 +15,10 @@ public:
             return *this;
         }
         delete[] this->m_pData;
-        this->m_pData = new char[strlen(object.m_pData) + 1];
-        strcpy(this->m_pData, object.m_pData);
+        if (object.m_pData != NULL) {
+            this->m_pData = new char[strlen(object.m_pData) + 1];
+            strcpy(this->m_pData, object.m_pData);
+        }
         return *this;
     }
 };
