@@ -1,0 +1,24 @@
+class Solution {
+public:
+    /**
+     * @param values: a vector of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    bool firstWillWin(vector<int> &values) {
+        // write your code here
+        vector<int> P(5, 0);
+        int sum = 0;
+        // P[i] = max(values[i] + min(P[i + 2], P[i + 3]),
+        //            values[i] + values[i + 1] + min(P[i + 3], P[i + 4]))
+        for (int i = values.size() - 1; i >= 0; --i) {
+            sum += values[i];
+            int a = i + 2 < values.size() ? P[(i + 2) % 5] : 0;
+            int b = i + 3 < values.size() ? P[(i + 3) % 5] : 0;
+            int c = i + 4 < values.size() ? P[(i + 4) % 5] : 0;
+            P[i % 5] = max(values[i] + min(a, b), 
+                       values[i] + values[i + 1] + min(b, c));
+        }
+        
+        return P[0] > sum - P[0];
+    }
+};
