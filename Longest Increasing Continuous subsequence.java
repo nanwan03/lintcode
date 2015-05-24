@@ -9,22 +9,17 @@ public class Solution {
           return 0;
         }
         int longest = 1;
-        int tempLongest = 1;
+        int tempIncrease = 1;
+        int tempDecrease = 1;
         for (int i = 0; i < A.length - 1; i ++) {
           if (A[i] < A[i + 1]) {
-            tempLongest++;
-            longest = Math.max(longest, tempLongest);
+            tempIncrease++;
+            tempDecrease = 1;
+            longest = Math.max(longest, tempIncrease);
           } else {
-            tempLongest = 1;
-          }
-        }
-        tempLongest = 1;
-        for (int i = A.length - 2; i >= 0; i --) {
-          if (A[i] > A[i + 1]) {
-            tempLongest++;
-            longest = Math.max(longest, tempLongest);
-          } else {
-            tempLongest = 1;
+            tempDecrease++;
+            tempIncrease = 1;
+            longest = Math.max(longest, tempDecrease);
           }
         }
         return longest;
