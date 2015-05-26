@@ -41,7 +41,7 @@ public class Solution {
 
     private class EntryComparator implements Comparator<Entry> {
       public int compare(Entry a, Entry b) {
-        return b.value - a.value;
+        return b.value - a.value == 0 ? a.hashCode() - b.hashCode() : b.value - a.value;
       }
     }
     public int kthSmallest(int[][] matrix, int k) {
@@ -51,36 +51,35 @@ public class Solution {
 		}
 		int row = matrix.length;
 		int col = matrix[0].length;
-		Queue<Entry> minHeap = new PriorityQueue<Entry>(matrix.length * matrix[0].length, new EntryComparator());
-		Set<Entry> visited = new HashSet<Entry>();
+		boolean[][] visited = new boolean[row][col];
+		TreeSet<Entry> minHeap = new TreeSet<Entry>(new EntryComparator());
 		Set<Integer> set = new HashSet<Integer>();
 		
 		Entry start = new Entry(row - 1, col - 1, matrix[row - 1][col - 1]);
-		minHeap.offer(start);
-		visited.add(start);
+		minHeap.add(start);
 		int result = matrix[row - 1][col - 1];
-		set.add(matrix[row - 1][col - 1]);
+		visited[row - 1][col - 1] = true;
+		set.add(result);
 		k--;
+		
 		while (k > 0) {
-			Entry current = minHeap.poll();
+			Entry current = minHeap.pollFirst();
             result = current.value;
             if (set.add(result)) {
             	k--;
             }
 			if (current.xIndex - 1 >= 0) {
-				Entry top = new Entry(current.xIndex - 1, current.yIndex,
-						matrix[current.xIndex - 1][current.yIndex]);
-				if (!visited.contains(top)) {
-					minHeap.offer(top);
-					visited.add(top);
+				Entry top = new Entry(current.xIndex - 1, current.yIndex, matrix[current.xIndex - 1][current.yIndex]);
+				if (!visited[current.xIndex - 1][current.yIndex]) {
+					visited[current.xIndex - 1][current.yIndex] = true;
+					minHeap.add(top);
 				}
 			}
 			if (current.yIndex - 1 >= 0) {
-				Entry left = new Entry(current.xIndex, current.yIndex - 1,
-						matrix[current.xIndex][current.yIndex - 1]);
-				if (!visited.contains(left)) {
-					minHeap.offer(left);
-					visited.add(left);
+				Entry left = new Entry(current.xIndex, current.yIndex - 1, matrix[current.xIndex][current.yIndex - 1]);
+				if (!visited[current.xIndex][current.yIndex - 1]) {
+					visited[current.xIndex][current.yIndex - 1] = true;
+					minHeap.add(left);
 				}
 			}
 		}
