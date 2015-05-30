@@ -15,7 +15,7 @@ public class Solution {
     	int tempSum = 0;
     	for (end = 0; end < nums.length; ++end) {
     		tempSum += nums[end];
-			while (start <= end && tempSum - nums[start] >= s) {
+			while (start < end && tempSum - nums[start] >= s) {
 				tempSum -= nums[start];
 				start++;
 			}
