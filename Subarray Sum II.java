@@ -43,6 +43,9 @@ public class Solution {
                         rst++;
                     }
                 }
+                /*
+                rst += rightIndex - leftIndex + 1;
+                */
             }
         }
         return rst;
