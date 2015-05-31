@@ -22,7 +22,11 @@ public class Solution {
     }
     public int kthSmallest(int[][] matrix, int k) {
         // write your code here
-        return Math.min(hSearch(matrix, k), vSearch(matrix, k));
+        if (matrix.length < matrix[0].length) {
+            return hSearch(matrix, k);
+        } else {
+            return vSearch(matrix, k);
+        }
     }
     private int hSearch(int[][] matrix, int k) {
         Queue<Node> heap = new PriorityQueue<Node>(k, new NodeComparator());
