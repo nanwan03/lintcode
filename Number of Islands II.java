@@ -54,8 +54,6 @@ public class Solution {
     	int xyRoot = find(root, x, y);
     	int uvRoot = find(root, u, v);
     	if (xyRoot != uvRoot) {
-    		root[x][y] = Math.min(xyRoot, uvRoot);
-    		root[u][v] = Math.min(xyRoot, uvRoot);
     		int temp = Math.max(xyRoot, uvRoot);
     		root[temp / root[0].length][temp % root[0].length] = Math.min(xyRoot, uvRoot);
     		lands--;
