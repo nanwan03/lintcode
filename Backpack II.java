@@ -9,9 +9,9 @@ public class Solution {
             return 0;
         }
         int[] dp = new int[m + 1];
-        for (int i = 1; i <= A.length; ++i) {
-            for (int j = m; j >= A[i - 1]; --j) {
-                dp[j] = Math.max(dp[j], dp[j - A[i - 1]] + V[i - 1]);
+        for (int i = 0; i < A.length; ++i) {
+            for (int j = m; j >= A[i]; --j) {
+                dp[j] = Math.max(dp[j], dp[j - A[i]] + V[i]);
             }
         }
         return dp[m];
