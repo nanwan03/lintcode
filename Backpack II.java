@@ -8,19 +8,12 @@ public class Solution {
         if (A == null || A.length == 0 || V == null || V.length == 0) {
             return 0;
         }
-        int[][] dp = new int[A.length + 1][m + 1];
-        for (int i = 0; i <= A.length; i++) {
-            for (int j = 0; j <= m; j++) {
-                if (i == 0 || j == 0) {
-                    dp[i][j] = 0;
-                } else {
-                    dp[i][j] = dp[i - 1][j];
-                    if (j >= A[i - 1]) {
-                        dp[i][j] = Math.max(dp[i][j], V[i - 1] + dp[i - 1][j - A[i - 1]]);
-                    }
-                }
+        int[] dp = new int[m + 1];
+        for (int i = 1; i <= A.length; ++i) {
+            for (int j = m; j >= A[i - 1]; --j) {
+                dp[j] = Math.max(dp[j], dp[j - A[i - 1]] + V[i - 1]);
             }
         }
-        return dp[A.length][m];
+        return dp[m];
     }
 }
