@@ -5,24 +5,14 @@ public class Solution {
      */
     public int findMissing(int[] nums) {
         // write your code here
-        if (nums == null || nums.length == 0) {
-            return 1;
+    	if(nums==null || nums.length == 0) {
+            return 0;
         }
-        for (int i = 0; i < nums.length; i++) {
-            while (nums[i] > 0 && nums[i] <= nums.length - 1 && nums[i] != i + 1) {
-                int temp = nums[nums[i] - 1];
-                if (temp == nums[i]) {
-                    break;
-                }
-                nums[nums[i] - 1] = nums[i];
-                nums[i] = temp;
-            }
+        int sum = 0;
+        for(int i=0; i < nums.length; i++) {
+            sum = sum + nums[i];
         }
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] != i + 1) {
-                return i + 1;
-            }
-        }
-        return 0;
+        int sumShouldBe = ((nums.length)*(nums.length+1))/2;
+        return (sumShouldBe - sum);
     }
 }
