@@ -4,7 +4,7 @@ public class Solution {
      * @param target an integer
      * @return an integer
      */
-    public int lastPosition(int[] A, int target) {
+    public int findPosition(int[] A, int target) {
         // Write your code here
         if (A == null || A.length == 0) {
             return -1;
@@ -14,7 +14,7 @@ public class Solution {
         while (left + 1 < right) {
             int mid = left + (right - left) / 2;
             if (A[mid] == target) {
-                left = mid;
+                return mid;
             } else if (A[mid] < target) {
                 left = mid + 1;
             } else {
