@@ -28,31 +28,23 @@ public class Solution {
         if (root == null) {
             return null;
         }
-        DoublyListNode head = convertToLinkList(root);
-        DoublyListNode dummy = head;
-        while (head != null && head.next != null) {
-            head.next.prev = head;
-            head = head.next;
-        }
-        return dummy;
-    }
-    private DoublyListNode convertToLinkList(TreeNode root) {
-        if (root == null) {
-            return null;
-        }
         DoublyListNode rootNode = new DoublyListNode(root.val);
         if (root.left == null && root.right == null) {
             return rootNode;
         }
-        DoublyListNode left = convertToLinkList(root.left);
-        DoublyListNode right = convertToLinkList(root.right);
+        DoublyListNode left = bstToDoublyList(root.left);
+        DoublyListNode right = bstToDoublyList(root.right);
         rootNode.next = right;
+        if (right != null) {
+            right.prev = rootNode;
+        }
         if (left != null) {
             DoublyListNode dummy = left;
             while (left.next != null) {
                 left = left.next;
             }
             left.next = rootNode;
+            rootNode.prev = left;
             return dummy;
         } else {
             return rootNode;
