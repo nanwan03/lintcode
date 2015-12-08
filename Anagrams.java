@@ -1,5 +1,5 @@
 public class Solution {
-    /**
+    /*
      * @param strs: A list of strings
      * @return: A list of strings
      */
