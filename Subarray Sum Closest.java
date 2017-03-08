@@ -17,9 +17,9 @@ public class Solution {
             return a.val - b.val;
         }
     }
-    public ArrayList<Integer> subarraySumClosest(int[] nums) {
+    public int[] subarraySumClosest(int[] nums) {
         // write your code here
-        ArrayList<Integer> rst = new ArrayList<Integer>();
+        int[] rst = new int[2];
         List<Node> items = new ArrayList<Node>();
         if (nums == null || nums.length == 0) {
             return rst;
@@ -49,9 +49,8 @@ public class Solution {
                 }
             }
         }
-        rst.add(index1);
-        rst.add(index2);
+        rst[0] = index1;
+        rst[1] = index2;
         return rst;
     }
 }
-
