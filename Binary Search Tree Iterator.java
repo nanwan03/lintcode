@@ -9,17 +9,17 @@
  *     }
  * }
  * Example of iterate a tree:
- * Solution iterator = new Solution(root);
+ * BSTIterator iterator = new BSTIterator(root);
  * while (iterator.hasNext()) {
  *    TreeNode node = iterator.next();
  *    do something for node
  * } 
  */
-public class Solution {
+public class BSTIterator {
     //@param root: The root of binary tree.
     private Stack<TreeNode> stack;
     private TreeNode cur;
-    public Solution(TreeNode root) {
+    public BSTIterator(TreeNode root) {
         // write your code here
         stack = new Stack<TreeNode>();
         cur = root;
