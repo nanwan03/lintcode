@@ -6,19 +6,19 @@
  * trie.startsWith("lint"); will return true
  */
 class TrieNode {
+    // Initialize your data structure here.
     TrieNode[] next;
     boolean end;
-    // Initialize your data structure here.
     public TrieNode() {
         next = new TrieNode[26];
         end = false;
     }
 }
 
-public class Solution {
+public class Trie {
     private TrieNode root;
 
-    public Solution() {
+    public Trie() {
         root = new TrieNode();
     }
 
