@@ -2,7 +2,7 @@ public class LFUCache {
     class Node {
         public Node prev, next;
         public final int freq;
-        public LinkedHashSet<Integer> keys = new LinkedHashSet<>();
+        public LinkedHashSet<Integer> keys = new LinkedHashSet<Integer>();
 
         public Node(Node prev, Node next, int freq, int key) {
             this.prev = prev;
