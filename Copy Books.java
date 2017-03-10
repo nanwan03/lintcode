@@ -22,18 +22,16 @@ public class Solution {
         while (left + 1 < right) {
             int mid = left + (right - left) / 2;
             if (valid(pages, k, mid)) {
-                right = mid - 1;
+                right = mid;
             } else {
-                left = mid + 1;
+                left = mid;
             }
         }
         if (valid(pages, k, left)) {
         	return left;
-        } else if (valid(pages, k, right)) {
-        	return right;
         } else {
-        	return right + 1;
-        }
+        	return right;
+        } 
     }
     private static boolean valid(int[] pages, int k, int page) {
         int sum = 0;
