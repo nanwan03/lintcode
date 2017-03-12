@@ -9,6 +9,9 @@ public class Solution {
     	if (edges == null || edges.length == 0) {
     		return n == 1;
     	}
+    	if (edges.length == 1) {
+    	    return n == 2;
+    	}
     	int[] root = new int[n];
     	for (int i = 0; i < n; ++i) {
     		root[i] = i;
