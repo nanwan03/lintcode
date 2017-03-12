@@ -7,7 +7,7 @@ public class Solution {
     public int minimumSize(int[] nums, int s) {
         // write your code here
     	if (nums == null || nums.length == 0) {
-    		return 0;
+    		return -1;
     	}
     	int start = 0;
     	int end = 0;
@@ -23,6 +23,6 @@ public class Solution {
 				rst = Math.min(rst, end - start + 1);
 			}
     	}
-    	return rst == Integer.MAX_VALUE ? 0 : rst;
+    	return rst == Integer.MAX_VALUE ? -1 : rst;
     }
 }
