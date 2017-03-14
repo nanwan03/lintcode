@@ -6,6 +6,7 @@ public class Solution {
     public ArrayList<Long> productExcludeItself(ArrayList<Integer> A) {
         ArrayList<Long> rst = new ArrayList<Long>();
         if (A == null || A.size() < 2) {
+            rst.add(1L);
             return rst;
         }
         long product = 1;
