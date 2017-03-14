@@ -10,37 +10,32 @@ public class Solution {
     /**
      * @param graph: A list of Directed graph node
      * @return: Any topological order for the given graph.
-     */   
+     */    
     public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
         // write your code here
         ArrayList<DirectedGraphNode> rst = new ArrayList<DirectedGraphNode>();
         if (graph == null || graph.size() == 0) {
             return rst;
         }
-        Map<DirectedGraphNode, Integer> visited = new HashMap<DirectedGraphNode, Integer>();
+        Map<DirectedGraphNode, Boolean> visited = new HashMap<DirectedGraphNode, Boolean>();
         for (DirectedGraphNode node : graph) {
-            visited.put(node, 0);
+            visited.put(node, false);
         }
-        Stack<DirectedGraphNode> stack = new Stack<DirectedGraphNode>();
         for (DirectedGraphNode node : graph) {
-            DFS(node, visited, graph, stack);
-        }
-        while (!stack.isEmpty()) {
-            rst.add(stack.pop());
-        }
-        return rst;
-    }
-    private void DFS(DirectedGraphNode node, Map<DirectedGraphNode, Integer> map, List<DirectedGraphNode> graph, Stack<DirectedGraphNode> stack) {
-        if (map.get(node) != 0) {
-            return;
-        }
-        map.put(node, 1);
-        for (DirectedGraphNode neighbor : node.neighbors) {
-            if (map.get(neighbor) == 0) {
-                DFS(neighbor, map, graph, stack);
+            if (!visited.get(node)) {
+                DFS(graph, rst, visited, node);
             }
         }
-        map.put(node, 2);
-        stack.push(node);
+        Collections.reverse(rst);
+        return rst;
+    }
+    private void DFS(ArrayList<DirectedGraphNode> graph, ArrayList<DirectedGraphNode> rst, Map<DirectedGraphNode, Boolean> visited, DirectedGraphNode node) {
+        visited.put(node, true);
+        for (DirectedGraphNode neighbor : node.neighbors) {
+            if (!visited.get(neighbor)) {
+                DFS(graph, rst, visited, neighbor);
+            }
+        }
+        rst.add(node);
     }
 }
