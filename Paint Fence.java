@@ -6,15 +6,17 @@ public class Solution {
      */
     public int numWays(int n, int k) {
         // Write your code here
-        if(n == 0) return 0;
-        else if(n == 1) return k;
-        int diffColorCounts = k*(k-1);
-        int sameColorCounts = k;
-        for(int i=2; i<n; i++) {
-            int temp = diffColorCounts;
-            diffColorCounts = (diffColorCounts + sameColorCounts) * (k-1);
-            sameColorCounts = temp;
+        // 当n=0时返回0
+        int dp[] = {0, k , k*k, 0};
+        if(n <= 2){
+            return dp[n];
         }
-        return diffColorCounts + sameColorCounts;
+        for(int i = 2; i < n; i++){
+            // 递推式：第三根柱子要么根第一个柱子不是一个颜色，要么跟第二根柱子不是一个颜色
+            dp[3] = (k - 1) * (dp[1] + dp[2]);
+            dp[1] = dp[2];
+            dp[2] = dp[3];
+        }
+        return dp[3];
     }
 }
