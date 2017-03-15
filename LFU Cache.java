@@ -29,33 +29,43 @@ public class LFUCache {
     // @return nothing
     public void set(int key, int value) {
         // Write your code here
-        if (this.capacity == 0) {
+        if (get(key) != -1) {
+            valueMap.put(key, value);
             return;
         }
-        if (valueMap.containsKey(key)) {
-            updateFreq(key);
-        } else {
-            if (valueMap.size() == this.capacity) {
-                evict();
+        
+        if (valueMap.size() == this.capacity) {
+            if (head == null) {
+                return;
             }
-            addNode(key);
+            int oldest = head.keys.iterator().next();
+            head.keys.remove(oldest);
+            if (head.keys.isEmpty()) {
+                removeNode(head);
+            }
+            nodeMap.remove(oldest);
+            valueMap.remove(oldest);
         }
+        
+        if (head == null) {
+            head = new Node(null, null, 1, key);
+        } else if (head.freq == 1) {
+            head.keys.add(key);
+        } else {
+            Node tmp = new Node(null, head, 1, key);
+            head.prev = tmp;
+            head = tmp;
+        }
+        
+        nodeMap.put(key, head);
         valueMap.put(key, value);
     }
 
     public int get(int key) {
         // Write your code here
-        if (valueMap.containsKey(key)) {
-            updateFreq(key);
-        }
-        if (valueMap.containsKey(key)) {
-            return valueMap.get(key);
-        } else {
+        if (!valueMap.containsKey(key)) {
             return -1;
         }
-    }
-    
-    private void updateFreq(int key) {
         Node node = nodeMap.get(key);
         node.keys.remove(key);
         if (node.next == null) {
@@ -71,6 +81,7 @@ public class LFUCache {
         if (node.keys.isEmpty()) {
             removeNode(node);
         }
+        return valueMap.get(key);
     }
 
     private void removeNode(Node node) {
@@ -82,31 +93,5 @@ public class LFUCache {
         if (node.next != null) {
             node.next.prev = node.prev;
         }
-    }
-    
-    private void addNode(int key) {
-        if (head == null) {
-            head = new Node(null, null, 1, key);
-        } else if (head.freq == 1) {
-            head.keys.add(key);
-        } else {
-            Node tmp = new Node(null, head, 1, key);
-            head.prev = tmp;
-            head = tmp;
-        }
-        nodeMap.put(key, head);
-    }
-
-    private void evict() {
-        if (head == null) {
-            return;
-        }
-        int oldest = head.keys.iterator().next();
-        head.keys.remove(oldest);
-        if (head.keys.isEmpty()) {
-            removeNode(head);
-        }
-        nodeMap.remove(oldest);
-        valueMap.remove(oldest);
     }
 }
