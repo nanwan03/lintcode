@@ -61,8 +61,4 @@ public class Solution {
         cur.next.prev = cur;
         cur.prev.next = cur;
     }
-    private void removeNode(Node cur) {
-        cur.next.prev = cur.prev;
-        cur.prev.next = cur.next;
-    }
 }
