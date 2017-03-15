@@ -1,25 +1,25 @@
 public class Solution {
 
-    // @param capacity, an integer
-    public class Node {
+    private class Node {
         int key;
         int value;
         Node prev;
         Node next;
-        Node (int key, int value) {
+        Node(int key, int value) {
             this.key = key;
             this.value = value;
-            this.next = null;
             this.prev = null;
+            this.next = null;
         }
     }
-    private int capacity;
+    private int size;
     private Node head = new Node(-1, -1);
     private Node tail = new Node(-1, -1);
     private Map<Integer, Node> map = new HashMap<Integer, Node>();
+    // @param capacity, an integer
     public Solution(int capacity) {
         // write your code here
-        this.capacity = capacity;
+        this.size = capacity;
         head.next = tail;
         tail.prev = head;
     }
@@ -46,10 +46,10 @@ public class Solution {
             map.get(key).value = value;
             return;
         }
-        if (map.size() == this.capacity) {
+        if (map.size() == size) {
             map.remove(head.next.key);
             head.next = head.next.next;
-            head = head.next.prev;
+            head.next.prev = head;
         }
         Node insert = new Node(key, value);
         map.put(key, insert);
