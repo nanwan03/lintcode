@@ -93,5 +93,7 @@ public class LFUCache {
         if (node.next != null) {
             node.next.prev = node.prev;
         }
+        node.next = null;
+        node.prev = null;
     }
 }
