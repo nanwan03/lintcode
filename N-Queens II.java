@@ -9,16 +9,17 @@ class Solution {
     public int totalNQueens(int n) {
         //write your code here
         ArrayList<Integer> cols = new ArrayList<Integer>();
-        return search(n, cols, 0);
+        return search(n, cols);
     }
-    private int search(int n, ArrayList<Integer> col, int rst) {
+    private int search(int n, ArrayList<Integer> col) {
         if (n ==col.size()) {
-            return rst + 1;
+            return 1;
         }
+        int rst = 0;
         for (int i = 0; i < n; i++) {
             if (isValid(col, i)) {
                 col.add(i);
-                rst = search(n, col, rst);
+                rst += search(n, col);
                 col.remove(col.size() - 1);
             }
         }
