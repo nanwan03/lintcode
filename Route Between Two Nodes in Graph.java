@@ -20,23 +20,20 @@ public class Solution {
                             DirectedGraphNode s, DirectedGraphNode t) {
         // write your code here
         if (graph == null || graph.size() == 0) {
-            return true;
+            return false;
         }
-        Set<Integer> visited = new HashSet<Integer>();
+        Set<Integer> isvisited = new HashSet<Integer>();
+        isvisited.add(s.label);
         Queue<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
         queue.offer(s);
-        visited.add(s.label);
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                DirectedGraphNode node = queue.poll();
-                if (node.label == t.label) {
-                    return true;
-                }
-                for (DirectedGraphNode neighbor : node.neighbors) {
-                    if(visited.add(neighbor.label)) {
-                        queue.offer(neighbor);
-                    }
+            DirectedGraphNode node = queue.poll();
+            if (node.label == t.label) {
+                return true;
+            }
+            for (DirectedGraphNode neighbor : node.neighbors) {
+                if (isvisited.add(neighbor.label)) {
+                    queue.offer(neighbor);
                 }
             }
         }
