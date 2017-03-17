@@ -12,6 +12,9 @@ public class Solution {
         if (dict == null || dict.size() == 0) {
             return 0;
         }
+        if (start.equals(end)) {
+            return 1;
+        }
         Queue<String> queue = new LinkedList<String>();
         queue.offer(start);
         dict.remove(start);
