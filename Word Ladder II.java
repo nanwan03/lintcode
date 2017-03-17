@@ -37,7 +37,7 @@ public class Solution {
                             continue;
                         }
                         String temp = replace(s, i, c);
-                        if (dict.contains(temp)) {
+                        if (dict.contains(temp) || temp.equals(end)) {
                             if (!queue.contains(temp)) {
                                 queue.offer(temp);
                             }
