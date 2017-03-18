@@ -17,20 +17,19 @@ public class Solution {
         if (graph == null || graph.size() == 0) {
             return rst;
         }
-        Set<DirectedGraphNode> visited = new HashSet<DirectedGraphNode>();
+        Set<DirectedGraphNode> isvisited = new HashSet<DirectedGraphNode>();
         for (DirectedGraphNode node : graph) {
-            if (visited.add(node)) {
-                DFS(graph, visited, rst, node);
+            if (isvisited.add(node)) {
+                DFS(rst, isvisited, node);
             }
         }
         Collections.reverse(rst);
         return rst;
     }
-    private void DFS(ArrayList<DirectedGraphNode> graph, Set<DirectedGraphNode> visited, ArrayList<DirectedGraphNode> rst, DirectedGraphNode node) {
-        visited.add(node);
-        for (DirectedGraphNode neighbor : node.neighbors) {
-            if (visited.add(neighbor)) {
-                DFS(graph, visited, rst, neighbor);
+    private void DFS(ArrayList<DirectedGraphNode> rst, Set<DirectedGraphNode> isvisited, DirectedGraphNode node) {
+        for(DirectedGraphNode neighbor : node.neighbors) {
+            if (isvisited.add(neighbor)) {
+                DFS(rst, isvisited, neighbor);
             }
         }
         rst.add(node);
