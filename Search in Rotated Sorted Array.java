@@ -19,7 +19,7 @@ public class Solution {
                 } else {
                     left = mid;
                 }
-            } else {
+            } else if (A[mid] < A[right]) {
                 if (A[mid] <= target && target <= A[right]) {
                     left = mid;
                 } else {

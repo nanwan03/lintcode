@@ -1,10 +1,11 @@
 public class Solution {
-	/** 
+    /** 
      * param A : an integer ratated sorted array and duplicates are allowed
      * param target :  an integer to be search
      * return : a boolean 
      */
     public boolean search(int[] A, int target) {
+        // write your code here
         if (A == null || A.length == 0) {
             return false;
         }
@@ -18,14 +19,14 @@ public class Solution {
                 } else {
                     left = mid;
                 }
-            } else if (A[left] > A[mid]) {
+            } else if (A[mid] < A[right]) {
                 if (A[mid] <= target && target <= A[right]) {
                     left = mid;
                 } else {
                     right = mid;
                 }
-            } else if (A[mid] != A[right]) {
-                left = mid;
+            } else if (A[left] == target) {
+                return true;
             } else {
                 left++;
             }
@@ -33,3 +34,4 @@ public class Solution {
         return A[left] == target || A[right] == target;
     }
 }
+
