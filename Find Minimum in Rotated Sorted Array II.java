@@ -12,12 +12,10 @@ public class Solution {
         int right = num.length - 1;
         while (left + 1 < right && num[left] >= num[right]) {
             int mid = left + (right - left) / 2;
-            if (num[mid] > num[left]) {
+            if (num[left] < num[mid]) {
                 left = mid + 1;
-            } else if (num[mid] < num[left]) {
+            } else if (num[mid] < num[right]) {
                 right = mid;
-            } else if (num[mid] != num[right]) {
-                left = mid + 1;
             } else {
                 left++;
             }
