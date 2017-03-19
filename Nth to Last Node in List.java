@@ -17,22 +17,15 @@ public class Solution {
      */
     ListNode nthToLast(ListNode head, int n) {
         // write your code here
-        int length = getLength(head);
-        if (length < n) {
-            return head;
+        ListNode fast = head;
+        for (int i = 0; i < n; ++i) {
+            fast = fast.next;
         }
-        int target = length - n + 1;
-        for (int index = 1; index < target; ++index) {
-            head = head.next;
+        ListNode slow = head;
+        while (fast != null) {
+            slow = slow.next;
+            fast = fast.next;
         }
-        return head;
-    }
-    private int getLength(ListNode head) {
-        int rst = 0;
-        while (head != null) {
-            rst++;
-            head = head.next;
-        }
-        return rst;
+        return slow;
     }
 }
