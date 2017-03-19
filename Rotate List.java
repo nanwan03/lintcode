@@ -15,37 +15,25 @@ public class Solution {
      * @param k: rotate to the right k places
      * @return: the list after rotation
      */
-    public ListNode rotateRight(ListNode head, int n) {
+    public ListNode rotateRight(ListNode head, int k) {
         // write your code here
-        int length = getLength(head);
-        if (length == 0) {
+        if (head == null) {
             return head;
         }
-        n = n % length;
-        if (n == 0) {
-            return head;
+        int rst = 1;
+        ListNode cur = head;
+        while (cur.next != null) {
+            rst ++;
+            cur = cur.next;
         }
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        head = dummy;
-        ListNode tail = head;
-        while (tail.next != null) {
-            tail = tail.next;
+        cur.next = head;
+        int len = rst - k % rst;
+        while (len > 0) {
+            cur = cur.next;
+            len--;
         }
-        for (int i = 0; i < length - n; i++) {
-            head = head.next;
-        }
-        ListNode newHead = head.next;
-        tail.next = dummy.next;
-        head.next = null;
-        return newHead;
-    }
-    private int getLength(ListNode node) {
-        int length = 0;
-        while (node != null) {
-            length++;
-            node = node.next;
-        }
-        return length;
+        head = cur.next;
+        cur.next = null;
+        return head;
     }
 }
