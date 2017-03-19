@@ -9,18 +9,16 @@ public class Solution {
             return;
         }
         for (int i = 0; i < A.length; ++i) {
-            int min = i;
-            for (int j = i + 1; j < A.length; ++j) {
-                if (A[j] < A[min]) {
-                    min = j;
+            for (int j = 1; j < A.length - i; ++j) {
+                if (A[j - 1] > A[j]) {
+                    swap(A, j, j - 1);
                 }
             }
-            swap(A, i, min);
         }
     }
     private void swap(int[] A, int i, int j) {
-        int tmp = A[i];
+        int temp = A[i];
         A[i] = A[j];
-        A[j] = tmp;
+        A[j] = temp;
     }
 }
