@@ -18,27 +18,21 @@ public class Solution {
     ListNode nthToLast(ListNode head, int n) {
         // write your code here
         int length = getLength(head);
-        if (length == 0 || length < n) {
+        if (length < n) {
             return head;
         }
-        ListNode fast = head;
-        ListNode slow = head;
-        for (int i = 0; i < n; i++) {
-            fast = fast.next;
+        int target = length - n + 1;
+        for (int index = 1; index < target; ++index) {
+            head = head.next;
         }
-        while (fast != null) {
-            slow = slow.next;
-            fast = fast.next;
-        }
-        return slow;
+        return head;
     }
-    private int getLength(ListNode node) {
-        int length = 0;
-        while (node != null) {
-            length++;
-            node = node.next;
+    private int getLength(ListNode head) {
+        int rst = 0;
+        while (head != null) {
+            rst++;
+            head = head.next;
         }
-        return length;
+        return rst;
     }
 }
-
