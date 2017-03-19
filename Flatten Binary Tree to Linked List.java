@@ -19,21 +19,28 @@ public class Solution {
         if (root == null) {
             return;
         }
-        flatten(root, null);
+        helper(root);
     }
-    private TreeNode flatten(TreeNode root, TreeNode prevTail) {
-        if (prevTail != null) {
-            prevTail.left = null;
-            prevTail.right = root;
+    private TreeNode helper(TreeNode root) {
+        if (root == null) {
+            return null;
         }
-        prevTail = root;
-        TreeNode right = root.right;
-        if (root.left != null) {
-            prevTail = flatten(root.left, prevTail);
+        if (root.left == null && root.right == null) {
+            return root;
         }
-        if (right != null) {
-            prevTail = flatten(right, prevTail);
+        TreeNode leftTail = helper(root.left);
+        TreeNode rightTail = helper(root.right);
+        if (leftTail != null) {
+            leftTail.right = root.right;
+            root.right = root.left;
+            root.left = null;
         }
-        return prevTail;
+        if (rightTail != null) {
+            return rightTail;
+        }
+        if (leftTail != null) {
+            return leftTail;
+        }
+        return root;
     }
 }
