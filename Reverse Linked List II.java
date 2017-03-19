@@ -1,5 +1,3 @@
-import lintcode.util.ListNode;
-
 /**
  * Definition for ListNode
  * public class ListNode {
@@ -25,26 +23,19 @@ public class Solution {
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         head = dummy;
-        ListNode cur = head;
-        ListNode prevM = null;
-        ListNode nodeM = null;
-        ListNode prev = null;
-        for (int i = 0; i <= n; i++) {
-            if (i < m) {
-                if (i == m - 1) {
-                    prevM = cur;
-                    nodeM = cur.next;
-                }
-                cur = cur.next;
-            } else {
-                ListNode temp = cur.next;
-                cur.next = prev;
-                prev = cur;
-                cur = temp;
-            }
+        for (int i = 0; i < m - 1; ++i) {
+            head = head.next;
         }
-        prevM.next = prev;
-        nodeM.next = cur;
+        ListNode prev = head.next;
+        ListNode cur = prev.next;
+        for (int i = 0; i < n - m; ++i) {
+            ListNode temp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        head.next.next = cur;
+        head.next = prev;
         return dummy.next;
     }
 }
