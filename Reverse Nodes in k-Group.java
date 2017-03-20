@@ -14,51 +14,36 @@ public class Solution {
      */
     public ListNode reverseKGroup(ListNode head, int k) {
         // Write your code here
-        int length = getLength(head);
-        if (length == 0) {
+        if(head == null || k == 1) {
             return head;
         }
-        if (k == 0) {
-            return head;
-        }
-        int groupNum = length / k;
-        if (groupNum == 0) {
-            return head;
-        }
-        ListNode cur = head;
-        ListNode prevTail = null;
-        ListNode curTail = null;
-        ListNode curHead = null;
-        for (int i = 0; i < groupNum; i++) {
-            ListNode prev = null;
-            for (int j = 0; j < k; j++) {
-                if (j == 0) {
-                    curTail = cur;
-                }
-                if (j == k - 1) {
-                    curHead = cur;
-                }
-                ListNode next = cur.next;
-                cur.next = prev;
-                prev = cur;
-                cur = next;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+        int i = 0;
+        while(head != null){
+            i++;
+            if(i % k ==0){
+                prev = reverse(prev, head.next);
+                head = prev.next;
+            }else {
+                head = head.next;
             }
-            if (prevTail == null) {
-                head = curHead;
-            } else {
-                prevTail.next = curHead;
-            }
-            prevTail = curTail;
         }
-        curTail.next = cur;
-        return head;
+        return dummy.next;
     }
-    private int getLength(ListNode head) {
-        int length = 0;
-        while (head != null) {
-            length++;
-            head = head.next;
+    private static ListNode reverse(ListNode head, ListNode tail){
+        ListNode rst = head.next;
+        ListNode prev = head.next;
+        ListNode cur = prev.next;
+        while(cur != tail){
+            ListNode tmp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = tmp;
         }
-        return length;
+        head.next.next = cur;
+        head.next = prev;
+        return rst;
     }
 }
