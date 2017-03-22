@@ -22,7 +22,7 @@ public class Solution {
         for (int i = 0; i < str.length(); ++i) {
             sum = sum * 10 + (str.charAt(i) - '0');
             if (sum == 0 || sum > n) {
-                return -1;
+                break;
             }
             if (!isused[sum]) {
                 isused[sum] = true;
