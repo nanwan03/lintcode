@@ -20,28 +20,25 @@ public class Solution {
         int right = max;
         while (left + 1 < right) {
             int mid = left + (right - left) / 2;
-            int pieces = getPiece(L, mid);
-            if (pieces < k) {
-                right = mid - 1;
-            } else {
+            if (isValid(L, mid, k)) {
                 left = mid;
+            } else {
+                right = mid - 1;
             }
         }
-        int leftNum = getPiece(L, left);
-        int rightNum = getPiece(L, right);
-        if (rightNum >= k) {
+        if (isValid(L, right, k)) {
             return right;
         }
-        if (leftNum >= k) {
+        if (isValid(L, left, k)) {
             return left;
         }
         return 0;
     }
-    private int getPiece(int[] L, int length) {
+    private boolean isValid(int[] L, int length, int k) {
         int rst = 0;
         for (int i : L) {
             rst += i / length;
         }
-        return rst;
+        return rst >= k;
     }
 }
