@@ -11,7 +11,7 @@ public class Solution {
         }
         int max = L[0];
         for (int i : L) {
-            max = Math.max(max, i);
+            max = Math.max(i, max);
         }
         return helper(L, k, max);
     }
@@ -29,18 +29,18 @@ public class Solution {
         }
         int leftNum = getPiece(L, left);
         int rightNum = getPiece(L, right);
-        if (leftNum >= k && rightNum >= k) {
+        if (rightNum >= k) {
             return right;
-        } else if (leftNum < k && rightNum < k) {
-            return 0;
-        } else {
+        }
+        if (leftNum >= k) {
             return left;
         }
+        return 0;
     }
-    private int getPiece(int[] L, int weight) {
+    private int getPiece(int[] L, int length) {
         int rst = 0;
         for (int i : L) {
-            rst += i / weight;
+            rst += i / length;
         }
         return rst;
     }
