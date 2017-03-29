@@ -24,7 +24,7 @@ public class Solution {
             if (isValid(pages, k, mid)) {
                 right = mid;
             } else {
-                left = mid;
+                left = mid + 1;
             }
         }
         if (isValid(pages, k, left)) {
