@@ -11,22 +11,30 @@ public class Solution {
      * @param root: The root of binary tree.
      * @return: The maximum amount of money you can rob tonight
      */
-    //helper[i][0]表示以i为根的子树不偷根节点能获得的最高价值，helper[i][1]表示以i为根的子树偷根节点能获得的最高价值
+    private class ResultType {
+        int notSteal;
+        int steal;
+        ResultType(int notSteal, int steal) {
+            this.notSteal = notSteal;
+            this.steal = steal;
+        }
+    }
     public int houseRobber3(TreeNode root) {
         // write your code here
-        int[] ans = helper(root);
-        return Math.max(ans[0], ans[1]);
-    }
-    private int[] helper(TreeNode root) {
         if (root == null) {
-            int[] now = new int[]{0, 0};
-            return now;
+            return 0;
         }
-        int[] left = helper(root.left);
-        int[] right = helper(root.right);
-        int[] now = new int[2];
-        now[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
-        now[1] = left[0] + right[0] + root.val;
-        return now;
+        ResultType rs = helper(root);
+        return Math.max(rs.notSteal, rs.steal);
+    }
+    private ResultType helper(TreeNode root) {
+        if (root == null) {
+            return new ResultType(0, 0);
+        }
+        ResultType left = helper(root.left);
+        ResultType right = helper(root.right);
+        int notSteal = Math.max(left.notSteal, left.steal) + Math.max(right.notSteal, right.steal);
+        int steal = left.notSteal + right.notSteal + root.val;
+        return new ResultType(notSteal, steal);
     }
 }
