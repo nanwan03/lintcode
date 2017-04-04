@@ -1,8 +1,8 @@
-public class Solution {
+public class MyQueue {
     private Stack<Integer> stack1;
     private Stack<Integer> stack2;
 
-    public Solution() {
+    public MyQueue() {
        // do initialization if necessary
        stack1 = new Stack<Integer>();
        stack2 = new Stack<Integer>();
@@ -23,11 +23,10 @@ public class Solution {
     public int top() {
         // write your code here
         if (stack2.isEmpty()) {
-            while(!stack1.isEmpty()) {
+            while (!stack1.isEmpty()) {
                 stack2.push(stack1.pop());
             }
         }
         return stack2.peek();
     }
 }
-
