@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Solution {
     /**
      * @param nums: A list of integers
@@ -16,24 +14,27 @@ public class Solution {
         }
         int max = 0;
         for (int i : num) {
-            if (map.get(i) == 1) {
-                continue;
+            if (map.get(i) == 0) {
+                max = Math.max(max, mark(map, i));
             }
-            int temp = i;
-            int tempLength = 1;
-            while (map.containsKey(temp + 1)) {
-                temp++;
-                tempLength++;
-                map.put(temp, 1);
-            }
-            temp = i;
-            while (map.containsKey(temp - 1)) {
-                temp--;
-                tempLength++;
-                map.put(temp, 1);
-            }
-            max = Math.max(max, tempLength);
         }
         return max;
+    }
+    private int mark(Map<Integer, Integer> map, int i) {
+        map.put(i, 1);
+        int rst = 1;
+        int temp = i;
+        while (map.containsKey(temp + 1) && map.get(temp + 1) == 0) {
+            temp++;
+            rst++;
+            map.put(temp, 1);
+        }
+        temp = i;
+        while (map.containsKey(temp - 1) && map.get(temp - 1) == 0) {
+            temp--;
+            rst++;
+            map.put(temp, 1);
+        }
+        return rst;
     }
 }
