@@ -35,20 +35,11 @@ class Solution {
         Queue<Interval> heap = new PriorityQueue<Interval>(airplanes.size(), new IntervalEndComparator());
         int rst = 0;
         for (Interval interval : airplanes) {
-            if (heap.isEmpty() || interval.start < heap.peek().end) {
-                heap.offer(interval);
-                rst = Math.max(rst, heap.size());
-            } else {
-                while (!heap.isEmpty()) {
-                    if (heap.peek().end <= interval.start) {
-                        heap.poll();
-                    } else {
-                        break;
-                    }
-                }
-                heap.offer(interval);
-                rst = Math.max(rst, heap.size());
+            while (!heap.isEmpty() && heap.peek().end <= interval.start) {
+                heap.poll();
             }
+            heap.offer(interval);
+            rst = Math.max(rst, heap.size());
         }
         return rst;
     }
