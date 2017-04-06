@@ -22,10 +22,12 @@ public class Solution {
         if (root == null || start > end) {
             return Integer.MIN_VALUE;
         }
+        start = Math.max(start, root.start);
+        end = Math.min(end, root.end);
         if (root.start == start && root.end == end) {
             return root.max;
         }
-        int mid = (root.start + root.end) / 2;
+        int mid = root.start + (root.end - root.start) / 2;
         if (end <= mid) {
             return query(root.left, start, end);
         } else if (start >= mid + 1) {
