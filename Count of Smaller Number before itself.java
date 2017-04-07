@@ -4,14 +4,17 @@ public class Solution {
      * @return: Count the number of element before this element 'ai' is 
      *          smaller than it and return count number array
      */
-    class SegmentTreeNode {
-         public int start, end;
-         public int count;
-         public SegmentTreeNode left, right;
-         public SegmentTreeNode(int start, int end) {
+    private class Node {
+        int start;
+        int end;
+        int count;
+        Node left;
+        Node right;
+        Node(int start, int end) {
             this.start = start;
             this.end = end;
-            this.left = this.right = null;
+            this.left = left;
+            this.right = right;
             this.count = 0;
         }
     }
@@ -21,32 +24,33 @@ public class Solution {
         if (A == null || A.length == 0) {
             return rst;
         }
-        int min = 10000;
+        int min = Integer.MAX_VALUE;
         int max = 0;
         for (int i : A) {
-            min = Math.min(i, min);
-            max = Math.max(i, max);
+            min = Math.min(min, i);
+            max = Math.max(max, i);
         }
-        SegmentTreeNode root = buildTree(min, max);
+        Node root = buildTree(min, max);
         for (int i : A) {
+            rst.add(query(root, min, i - 1));
             modify(root, i);
-            rst.add(query(root, i));
         }
         return rst;
     }
-    private SegmentTreeNode buildTree(int start, int end) {
+    private Node buildTree(int start, int end) {
         if (start > end) {
             return null;
         }
         if (start == end) {
-            return new SegmentTreeNode(start, end);
+            return new Node(start, end);
         }
-        SegmentTreeNode root = new SegmentTreeNode(start, end);
-        root.left = buildTree(start, (start + end ) / 2);
-        root.right = buildTree((start + end) / 2 + 1, end);
+        Node root = new Node(start, end);
+        int mid = (start + end) / 2;
+        root.left = buildTree(start, mid);
+        root.right = buildTree(mid + 1, end);
         return root;
     }
-    private void modify(SegmentTreeNode root, int value) {
+    private void modify(Node root, int value) {
         if (root == null) {
             return;
         }
@@ -57,25 +61,25 @@ public class Solution {
         int mid = (root.start + root.end) / 2;
         if (value <= mid) {
             modify(root.left, value);
-        } else if (value >= mid + 1) {
+        } else {
             modify(root.right, value);
         }
-        root.count++;
+        root.count = root.left.count + root.right.count;
     }
-    private int query(SegmentTreeNode root, int value) {
+    private int query(Node root, int start, int end) {
         if (root == null) {
             return 0;
         }
-        if (root.start == value && root.end == value) {
-            return 0;
+        if (root.start == start && root.end == end) {
+            return root.count;
         }
         int mid = (root.start + root.end) / 2;
-        if (value <= mid) {
-            return query(root.left, value);
-        } else if (value >= mid + 1) {
-            return root.left.count + query(root.right, value);
+        if (end <= mid) {
+            return query(root.left, start, end);
+        } else if (start >= mid + 1) {
+            return query(root.right, start, end);
+        } else {
+            return query(root.left, start, mid) + query(root.right, mid + 1, end);
         }
-        return -1;
     }
 }
-
