@@ -15,18 +15,23 @@ public class Solution {
     public ListNode removeElements(ListNode head, int val) {
         // Write your code here
         if (head == null) {
-            return head;
+            return null;
         }
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         head = dummy;
-        while (head != null && head.next != null) {
+        while (head.next != null) {
             if (head.next.val == val) {
-                head.next = head.next.next;
+                helper(head, val);
             } else {
                 head = head.next;
             }
         }
         return dummy.next;
+    }
+    private void helper(ListNode node, int val) {
+        while (node.next != null && node.next.val == val) {
+            node.next = node.next.next;
+        }
     }
 }
