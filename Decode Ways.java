@@ -5,21 +5,25 @@ public class Solution {
      */
     public int numDecodings(String s) {
         // Write your code here
-        if (s == null || s.length() == 0 || s.charAt(0) == '0') {
+        if (s == null || s.length() == 0) {
             return 0;
         }
-        int[] dp = new int[s.length()];
-        dp[0] = 1;
-        for (int i = 1; i < s.length(); i++) {
-            if (s.charAt(i) != '0') {
-                dp[i] = dp[i - 1];
-            }
-            String str = s.substring(i - 1, i + 1);
-            int temp = Integer.valueOf(str);
-            if (10 <= temp && temp <= 26) {
-                dp[i] = dp[i] + (i == 1 ? 1 : dp[i - 2]);
-            }
+        if (s.length() == 1) {
+            return s.charAt(0) == '0' ? 0 : 1;
         }
-        return dp[s.length() - 1];
+        int[] dp = new int[]{1, 1, 0};
+        for (int i = 1; i < s.length(); ++i) {
+            dp[2] = 0;
+            if (s.charAt(i) != '0') {
+                dp[2] = dp[1];
+            }
+            int val = Integer.parseInt(s.substring(i - 1, i + 1));
+            if (10 <= val && val <= 26) {
+                dp[2] += dp[0];
+            }
+            dp[0] = dp[1];
+            dp[1] = dp[2];
+        }
+        return dp[2];
     }
 }
