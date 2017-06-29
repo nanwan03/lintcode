@@ -5,27 +5,39 @@ public class Solution {
      * @return: A boolean
      */
     public boolean isMatch(String s, String p) {
-        if (p.length() == 0) {
-            return s.length() == 0;
+        // write your code here
+        if (s == null) {
+            return p == null;
         }
-        boolean[] dp = new boolean[s.length() + 1];
+        if (p == null) {
+            return s == null;
+        }
+        int sSize = s.length();
+        int pSize = p.length();
+        s = " " + s;
+        p = " " + p;
+        boolean[] dp = new boolean[sSize + 1];
         dp[0] = true;
-        for (int pIndex = 0; pIndex < p.length(); pIndex++) {
-            if (p.charAt(pIndex) != '*') {
-                for (int sIndex = s.length() - 1; sIndex >= 0; sIndex--) {
-                    dp[sIndex + 1] = dp[sIndex] && (s.charAt(sIndex) == p.charAt(pIndex) || p.charAt(pIndex) == '?');
-                }
-            } else {
-                int sIndex = 0;
-                while (sIndex <= s.length() && !dp[sIndex]) {
-                    sIndex++;
-                }
-                while (sIndex <= s.length()) {
-                    dp[sIndex++] = true;
-                }
+        boolean[] allstars = new boolean[pSize + 1];
+        for (int i = 1; i <= pSize; ++i) {
+            if (p.charAt(i) != '*') {
+                break;
             }
-            dp[0] = dp[0] && (p.charAt(pIndex) == '*');
+            allstars[i] = true;
         }
-        return dp[s.length()];
+        for (int i = 1; i <= pSize; ++i) {
+            boolean pre = dp[0];
+            dp[0] = allstars[i];
+            for (int j = 1; j <= sSize; ++j) {
+                boolean temp = dp[j];
+                if (p.charAt(i) != '*') {
+                    dp[j] = pre && (s.charAt(j) == p.charAt(i) || p.charAt(i) == '?');
+                } else {
+                    dp[j] = dp[j - 1] || dp[j];  //dp[i][j - 1] || dp[i - 1][j]
+                }
+                pre = temp;               //pre: dp[i - 1][j - 1]
+            }
+        }
+        return dp[sSize];
      }
 }
