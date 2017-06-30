@@ -5,28 +5,24 @@ public class Solution {
      */
     public int houseRobber2(int[] nums) {
         // write your code here
-        if (nums.length == 0) {
+        if (nums == null || nums.length == 0) {
             return 0;
         }
         if (nums.length == 1) {
             return nums[0];
         }
-        return Math.max(robber1(nums, 0, nums.length - 2), robber1(nums, 1, nums.length - 1));
+        return Math.max(helper(nums, 0, nums.length - 2), helper(nums, 1, nums.length - 1));
     }
-    private int robber1(int[] nums, int start, int end) {
-    	if (start == end) {
-    		return nums[end];
-    	}
-        if (start + 1 == end) {
-            return Math.max(nums[start], nums[end]);
+    private int helper(int[] nums, int start, int end) {
+        if (start == end) {
+            return nums[start];
         }
-        int maxPrev = Math.max(nums[start], nums[start + 1]);
-        int max2Before = nums[start];
-        for (int i = start + 2; i <= end; i++) {
-            int tempMax = Math.max(max2Before + nums[i], maxPrev);
-            max2Before = maxPrev;
-            maxPrev = tempMax;
+        int[] dp = new int[]{nums[start], Math.max(nums[start], nums[start + 1]), 0};
+        for (int i = start + 2; i <= end; ++i) {
+            dp[2] = Math.max(dp[0] + nums[i], dp[1]);
+            dp[0] = dp[1];
+            dp[1] = dp[2];
         }
-        return maxPrev;
+        return dp[1];
     }
 }

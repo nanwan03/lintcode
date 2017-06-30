@@ -11,13 +11,12 @@ public class Solution {
         if (A.length == 1) {
             return A[0];
         }
-        long maxPrev = Math.max(A[0], A[1]);
-        long max2Before = A[0];
-        for (int i = 2; i < A.length; i++) {
-            long tempMax = Math.max(max2Before + A[i], maxPrev);
-            max2Before = maxPrev;
-            maxPrev = tempMax;
+        long[] dp = new long[]{A[0], Math.max(A[0], A[1]), 0};
+        for (int i = 2; i < A.length; ++i) {
+            dp[2] = Math.max(dp[0] + A[i], dp[1]);
+            dp[0] = dp[1];
+            dp[1] = dp[2];
         }
-        return maxPrev;
+        return dp[1];
     }
 }
