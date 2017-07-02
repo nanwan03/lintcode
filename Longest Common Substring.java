@@ -8,17 +8,15 @@ public class Solution {
         if (A == null || B == null || A.length() == 0 || B.length() == 0) {
             return 0;
         }
-        int[][] dp = new int[A.length() + 1][B.length() + 1];
+        int sizeA = A.length();
+        int sizeB = B.length();
+        int[][] dp = new int[sizeA + 1][sizeB + 1];
         int longest = 0;
-        for (int i = 0; i <= A.length(); i++) {
-            for (int j = 0; j <= B.length(); j++) {
-                if (i == 0 || j == 0) {
-                    dp[i][j] = 0;
-                } else {
-                    if (A.charAt(i - 1) == B.charAt(j - 1)) {
-                        dp[i][j] = dp[i - 1][j - 1] + 1;
-                        longest = Math.max(longest, dp[i][j]);
-                    }
+        for (int i = 1; i <= sizeA; ++i) {
+            for (int j = 1; j <= sizeB; ++j) {
+                if (A.charAt(i - 1) == B.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    longest = Math.max(longest, dp[i][j]);
                 }
             }
         }
