@@ -6,38 +6,30 @@ public class Solution {
      */
     public boolean isMatch(String s, String p) {
         // write your code here
-        if (s == null) {
-            return p == null;
-        }
-        if (p == null) {
-            return s == null;
+        if (s == null || p == null) {
+            return false;
         }
         int sSize = s.length();
         int pSize = p.length();
         s = " " + s;
         p = " " + p;
-        boolean[] dp = new boolean[sSize + 1];
-        dp[0] = true;
-        boolean[] allstars = new boolean[pSize + 1];
+        boolean[][] dp = new boolean[sSize + 1][pSize + 1];
+        dp[0][0] = true;
         for (int i = 1; i <= pSize; ++i) {
             if (p.charAt(i) != '*') {
                 break;
             }
-            allstars[i] = true;
+            dp[0][i] = true;
         }
-        for (int i = 1; i <= pSize; ++i) {
-            boolean pre = dp[0];
-            dp[0] = allstars[i];
-            for (int j = 1; j <= sSize; ++j) {
-                boolean temp = dp[j];
-                if (p.charAt(i) != '*') {
-                    dp[j] = pre && (s.charAt(j) == p.charAt(i) || p.charAt(i) == '?');
-                } else {
-                    dp[j] = dp[j - 1] || dp[j];  //dp[i][j - 1] || dp[i - 1][j]
+        for (int i = 1; i <= sSize; ++i) {
+            for (int j = 1; j <= pSize; ++j) {
+                if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '?') {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (p.charAt(j) == '*') {
+                    dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
                 }
-                pre = temp;               //pre: dp[i - 1][j - 1]
             }
         }
-        return dp[sSize];
+        return dp[sSize][pSize];
      }
 }

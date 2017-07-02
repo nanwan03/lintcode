@@ -11,11 +11,11 @@ public class Solution {
         }
         int sSize = s.length();
         int pSize = p.length();
-        boolean[][] dp = new boolean[sSize + 1][pSize + 1];
-        dp[0][0] = true;
         s = " " + s;
         p = " " + p;
-        for (int i = 2; i <= pSize; ++i) {
+        boolean[][] dp = new boolean[sSize + 1][pSize + 1];
+        dp[0][0] = true;
+        for (int i = 2; i <= pSize; i = i + 2) {
             if (p.charAt(i) == '*' && dp[0][i - 2]) {
                 dp[0][i] = true;
             }
@@ -26,8 +26,8 @@ public class Solution {
                     dp[i][j] = dp[i - 1][j - 1];
                 } else if (j > 1 && p.charAt(j) == '*') {
                     dp[i][j] = dp[i][j - 2];
-                    if (p.charAt(j - 1) == s.charAt(i) || p.charAt(j - 1) == '.') {
-                        dp[i][j] = dp[i][j] || dp[i - 1][j] || dp[i][j - 1];
+                    if (s.charAt(i) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
                     }
                 }
             }
