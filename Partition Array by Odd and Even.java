@@ -10,14 +10,12 @@ public class Solution {
         }
         int left = 0;
         int right = nums.length - 1;
-        while (left < right) {
-            while (nums[right] % 2 == 0) {
-                right--;
-            }
-            if (nums[left] % 2 == 0) {
-                swap(nums, left, right--);
+        int cur = left;
+        while (cur <= right) {
+            if (nums[cur] % 2 == 1) {
+                swap(nums, cur++, left++);
             } else {
-                left++;
+                cur++;
             }
         }
     }
