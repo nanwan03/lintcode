@@ -6,32 +6,33 @@ public class Solution {
      */
     public String DeleteDigits(String A, int k) {
         // write your code here
-        if (k == 0 || A == null || A.length() == 0) {
-        	return A;
+        if (A == null || A.length() == 0 || k == 0) {
+            return A;
         }
-        Deque<Character> queue = new LinkedList<Character>();
+        Stack<Character> stack = new Stack<Character>();
         for (char c : A.toCharArray()) {
-        	if (queue.isEmpty() || c >= queue.peekFirst()) {
-        		queue.offerFirst(c);
-        	} else if (queue.peekFirst() > c){
-        		while (!queue.isEmpty() && queue.peekFirst() > c && k > 0) {
-        			queue.pollFirst();
-        			k--;
-        		}
-        		queue.offerFirst(c);
-        	}
+            if (stack.isEmpty() || c >= stack.peek()) {
+                stack.push(c);
+            } else if (c < stack.peek()){
+                while (!stack.isEmpty() && stack.peek() > c && k > 0) {
+                    stack.pop();
+                    k--;
+                }
+                stack.push(c);
+            }
         }
         while (k > 0) {
-        	queue.pollFirst();
-        	k--;
+            stack.pop();
+            k--;
         }
-        while (!queue.isEmpty() && queue.peekLast() == '0') {
-        	queue.pollLast();
+        String sb = new String();
+        while (!stack.isEmpty()) {
+            sb = stack.pop() + sb;
         }
-        StringBuilder sb = new StringBuilder();
-        while (!queue.isEmpty()) {
-        	sb.append(queue.pollLast());
+        int start = 0;
+        while (start < sb.length() && sb.charAt(start) == '0') {
+            start++;
         }
-        return sb.toString();
+        return sb.substring(start);
     }
 }
