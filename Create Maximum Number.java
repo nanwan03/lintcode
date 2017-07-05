@@ -22,7 +22,6 @@ public class Solution {
         } else {
             int max = m >= k ? k : m;
             int min = n >= k ? 0 : k - n;
-
             int[] results = new int[k];
             for(int i = min; i <= max; ++i) {
                 int[] temp = merge(getMax(nums1, i), getMax(nums2, k - i), k);
@@ -63,15 +62,22 @@ public class Solution {
             return new int[0];
         }
         int[] results = new int[k];
-        int len = 0;
-        for(int j = 0; j < nums.length; ++j) {
-            while(len + nums.length - j > k 
-                    && len > 0 
-                    && results[len - 1] < nums[j]) {
-                len--;
+        Stack<Integer> stack = new Stack<Integer>();
+        for (int i = 0; i < nums.length; ++i) {
+            if (stack.isEmpty() || nums[i] <= stack.peek()) {
+                stack.push(nums[i]);
+            } else if (stack.peek() < nums[i]) {
+                while (!stack.isEmpty() && stack.peek() < nums[i] && nums.length - i + stack.size() > k) {
+                    stack.pop();
+                }
+                stack.push(nums[i]);
             }
-            if (len < k)
-                results[len++] = nums[j];
+        }
+        while (stack.size() > k) {
+            stack.pop();
+        }
+        for (int i = results.length - 1; i >= 0; --i) {
+            results[i] = stack.pop();
         }
         return results;
     }
