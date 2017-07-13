@@ -34,4 +34,3 @@ public class Solution {
         return A[left] == target || A[right] == target;
     }
 }
-
