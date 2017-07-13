@@ -5,46 +5,48 @@ public class Solution {
      */
     public long reversePairs(int[] A) {
         // Write your code here
-        return mergeSort(A, 0, A.length - 1);
+        if (A == null || A.length == 0) {
+            return 0;
+        }
+        int[] aux = new int[A.length];
+        return mergeSort(A, aux, 0, A.length - 1);
     }
-    private int mergeSort(int[] A, int start, int end) {
+    private long mergeSort(int[] A, int[] aux, int start, int end) {
         if (start >= end) {
             return 0;
         }
-        
-        int mid = (start + end) / 2;
-        int sum = 0;
-        sum += mergeSort(A, start, mid);
-        sum += mergeSort(A, mid+1, end);
-        sum += merge(A, start, mid, end);
-        return sum;
+        long rst = 0;
+        int mid = start + (end - start) / 2;
+        rst += mergeSort(A, aux, start, mid);
+        rst += mergeSort(A, aux, mid + 1, end);
+        rst += merge(A, aux, start, mid, end);
+        return rst;
     }
-    private int merge(int[] A, int start, int mid, int end) {
-        int[] temp = new int[A.length];
+    private void copyOf(int[] src, int[] des, int start, int end) {
+        for (int i = start; i <= end; ++i) {
+            des[i] = src[i];
+        }
+    }
+    private long merge(int[] A, int[] aux, int start, int mid, int end) {
+        if (start >= end) {
+            return 0;
+        }
+        copyOf(A, aux, start, end);
         int leftIndex = start;
         int rightIndex = mid + 1;
-        int index = start;
-        int sum = 0;
-        
+        int cur = start;
+        long rst = 0;
         while (leftIndex <= mid && rightIndex <= end) {
-            if (A[leftIndex] <= A[rightIndex]) {
-                temp[index++] = A[leftIndex++];
+            if (aux[leftIndex] <= aux[rightIndex]) {
+                A[cur++] = aux[leftIndex++];
             } else {
-                temp[index++] = A[rightIndex++];
-                sum += mid - leftIndex + 1;
+                rst += mid + 1 - leftIndex;
+                A[cur++] = aux[rightIndex++];
             }
         }
         while (leftIndex <= mid) {
-            temp[index++] = A[leftIndex++];
+            A[cur++] = aux[leftIndex++];
         }
-        while (rightIndex <= end) {
-            temp[index++] = A[rightIndex++];
-        }
-        
-        for (int i = start; i <= end; i++) {
-            A[i] = temp[i];
-        }
-        
-        return sum;
+        return rst;
     }
 }
