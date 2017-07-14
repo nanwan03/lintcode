@@ -19,35 +19,36 @@ public class Solution {
         if (lists == null || lists.size() == 0) {
             return null;
         }
-        int end = lists.size();
-        while (end > 1) {
-            int mid = (end + 1) / 2;
-            for (int i = 0; i < end / 2; i++) {
-                lists.set(i, merge(lists.get(i), lists.get(i + mid)));
+        int left = 0;
+        int right = lists.size() - 1;
+        while (right > 0) {
+            left = 0;
+            while (left < right) {
+                lists.set(left, merge(lists.get(left), lists.get(right)));
+                left++;
+                right--;
             }
-            end = mid;
         }
         return lists.get(0);
     }
     private ListNode merge(ListNode left, ListNode right) {
         ListNode dummy = new ListNode(0);
-        ListNode tail = dummy;
+        ListNode head = dummy;
         while (left != null && right != null) {
-            if (left.val < right.val) {
-                tail.next = left;
+            if(left.val < right.val) {
+                head.next = left;
                 left = left.next;
             } else {
-                tail.next = right;
+                head.next = right;
                 right = right.next;
             }
-            tail = tail.next;
+            head = head.next;
         }
         if (left != null) {
-            tail.next =  left;
+            head.next = left;
         } else {
-            tail.next = right;
+            head.next = right;
         }
         return dummy.next;
     }
 }
-
