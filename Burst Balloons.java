@@ -5,26 +5,24 @@ public class Solution {
      */
     public int maxCoins(int[] nums) {
         // Write your code here
-         int[] helper = new int[nums.length + 2];
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int[] helper = new int[nums.length + 2];
         helper[0] = 1;
         helper[helper.length - 1] = 1;
         for (int i = 0; i < nums.length; ++i) {
             helper[i + 1] = nums[i];
         }
-        
-        int[][] dp = new int[helper.length][helper.length];
-        for (int len = 1; len <= nums.length; ++len) {
-            for (int start = 1; start <= nums.length - len + 1; ++start) {
-                int end = start + len - 1;
-                int rst = 0;
-                for (int cur = start; cur <= end; ++cur) {
-                    int coins = dp[start][cur - 1] + dp[cur + 1][end];
-                    coins += helper[start - 1] * helper[cur] * helper[end + 1];
-                    rst = Math.max(rst, coins);
+        int size = helper.length;
+        int[][] dp = new int[size][size];
+        for (int end = 1; end < size - 1; ++end) {
+            for (int start = end; start > 0; --start) {
+                for (int k = end; k >= start; --k) {
+                    dp[start][end] = Math.max(dp[start][end], dp[start][k - 1] + dp[k + 1][end] + helper[start - 1] * helper[k] * helper[end + 1]);
                 }
-                dp[start][end] = rst;
             }
         }
-        return dp[1][nums.length];
+        return dp[1][size - 2];
     }
 }
