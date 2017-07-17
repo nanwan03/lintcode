@@ -5,25 +5,26 @@ public class Solution {
      */
     public boolean firstWillWin(int[] values) {
         // write your code here
-        // dp 表示从i到end 的最大值
-        // int values[] ={1,2,4,3,4,8,5,6,12};
-        int len = values.length;
-        // 长度小于2的时候第一个人一定获胜
-        if(len <= 2)
+        if (values == null || values.length == 0) {
+            return false;
+        }
+        if (values.length <= 2) {
             return true;
-        int dp[] = new int[len+1];
-        dp[len] = 0;
-        dp[len-1] = values[len-1];
-        dp[len-2] = values[len-1] + values[len - 2];
-        dp[len - 3] = values[len-3] + values[len - 2];
-        for(int i = len -4;i>=0;i--){
-            dp[i] = values[i] + Math.min(dp[i+2],dp[i+3]);
-            dp[i] = Math.max(dp[i],values[i]+values[i+1]+ Math.min(dp[i+3],dp[i+4]));
-
+        }
+        int size = values.length;
+        int[] dp = new int[]{values[size - 3] + values[size - 2], values[size - 2] + values[size - 1], values[size - 1], 0};
+        for (int i = size - 4; i >= 0; --i) {
+            int temp = values[i] + Math.min(dp[1], dp[2]);
+            temp = Math.max(temp, values[i] + values[i + 1] + Math.min(dp[2], dp[3]));
+            dp[3] = dp[2];
+            dp[2] = dp[1];
+            dp[1] = dp[0];
+            dp[0] = temp;
         }
         int sum = 0;
-        for(int a:values)
-            sum +=a;
+        for (int value : values) {
+            sum += value;
+        }
         return dp[0] > sum - dp[0];
     }
 }
