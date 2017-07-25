@@ -6,23 +6,21 @@ public class Solution {
      */
     public int minimumSize(int[] nums, int s) {
         // write your code here
-    	if (nums == null || nums.length == 0) {
-    		return -1;
-    	}
-    	int start = 0;
-    	int end = 0;
-    	int rst = Integer.MAX_VALUE;
-    	int tempSum = 0;
-    	for (end = 0; end < nums.length; ++end) {
-    		tempSum += nums[end];
-			while (start < end && tempSum - nums[start] >= s) {
-				tempSum -= nums[start];
-				start++;
-			}
-			if (tempSum >= s) {
-				rst = Math.min(rst, end - start + 1);
-			}
-    	}
-    	return rst == Integer.MAX_VALUE ? -1 : rst;
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int length = -1;
+        int sum = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            sum += nums[i];
+            while (sum - nums[left] >= s) {
+                sum -= nums[left++];
+            }
+            if (sum >= s) {
+                length = length == -1 ? i - left + 1 : Math.min(length, i - left + 1);
+            }
+        }
+        return length;
     }
 }
