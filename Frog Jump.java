@@ -11,6 +11,9 @@ public class Solution {
         
         Map<Integer, Set<Integer>> map = new HashMap<Integer, Set<Integer>>();
         for (int i = 0; i < stones.length; i++) {
+            if (i > 3 && stones[i] > stones[i - 1] * 2) {
+                return false;
+            }
         	map.put(stones[i], new HashSet<Integer>() );
         }
         map.get(0).add(1);
