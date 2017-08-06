@@ -26,7 +26,7 @@ public class RandomizedSet {
             return false;
         }
         int index = map.get(val);
-        if (index != map.size() - 1) {
+        if (index != lists.size() - 1) {
             int i = lists.get(lists.size() - 1);
             lists.set(index, i);
             map.put(i, index);
