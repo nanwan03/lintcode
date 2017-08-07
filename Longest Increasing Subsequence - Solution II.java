@@ -1,25 +1,20 @@
 public class Solution {
     /**
-     * @param envelopes a number of envelopes with widths and heights
-     * @return the maximum number of envelopes
+     * @param nums: The integer array
+     * @return: The length of LIS (longest increasing subsequence)
      */
-    private class Cmp implements Comparator<int[]> {
-        public int compare(int[] a, int[] b) {
-            return a[0] == b[0] ? b[1] - a[1] : a[0] - b[0];
-        }
-    }
-    public int maxEnvelopes(int[][] envelopes) {
-        // Write your code here
-        Arrays.sort(envelopes, new Cmp());
+    public int longestIncreasingSubsequence(int[] nums) {
+        // write your code here
+        int[] dp = new int[nums.length];
         int rst = 0;
-        int dp[] = new int[envelopes.length];
-        for(int[] envelope : envelopes){
-            int index = search(dp, 0, rst, envelope[1]);
-            dp[index] = envelope[1];
+        for(int i : nums) {
+            int index = search(dp, 0, rst, i);
+            dp[index] = i;
             if(index == rst) {
                 rst++;
             }
         }
+
         return rst;
     }
     private int search(int[] A, int left, int right, int target) {
@@ -46,3 +41,4 @@ public class Solution {
         }
     }
 }
+
