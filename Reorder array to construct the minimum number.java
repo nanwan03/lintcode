@@ -3,36 +3,31 @@ public class Solution {
      * @param nums n non-negative integer array
      * @return a string
      */
+    private class Cmp implements Comparator<String> {
+        public int compare(String a, String b) {
+          return (a + b).compareTo(b + a);
+        }
+    }
     public String minNumber(int[] nums) {
         // Write your code here
-        int n = nums.length;
-        if (n < 1) return "";
-        
-        String[] strs = new String[n];
-        for (int i = 0; i < n; i++) {
-            strs[i] = String.valueOf(nums[i]);
+        if (nums == null || nums.length == 0) {
+          return "";
         }
-        
-        Arrays.sort(strs, new Cmp());
-        
-        String ans = "";
-        for (int i = n - 1; i >= 0; i--) {
-        	ans = ans.concat(strs[i]);
+        String[] str = new String[nums.length];
+        for (int i = 0; i < nums.length; ++i) {
+            str[i] = String.valueOf(nums[i]);
         }
-        
+        Arrays.sort(str, new Cmp());
+        StringBuilder sb = new StringBuilder();
+        for (String s : str) {
+          sb.append(s);
+        }
         int i = 0;
-        while (i < n && ans.charAt(i) == '0')
-            i ++;
-
-        if (i == n) return "0";
-        return ans.substring(i);
-    }
-    class Cmp implements Comparator<String>{
-	@Override
-	public int compare(String a, String b) {
-		String ab = a.concat(b);
-		String ba = b.concat(a);
-		return ba.compareTo(ab);
-	}
-}
+        for (i = 0; i < sb.length() && sb.charAt(i) == '0'; ++i){}
+        if (i == sb.length()) {
+            return "0";
+        } else {
+            return sb.substring(i);
+        }
+      }
 }
