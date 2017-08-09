@@ -5,19 +5,15 @@ public class Solution {
      */
     public int getMoneyAmount(int n) {
         // Write your code here
+        if (n == 0) {
+            return 0;
+        }
         int[][] dp = new int[n + 1][n + 1];
-        for (int l = 2; l <= n; l++) {
-            for (int i = 1; i <= n - (l - 1); i++) {
-                int j = i + (l - 1);
-                dp[i][j] = Integer.MAX_VALUE;
-                for (int g = i; g <= j; g++) {
-                    int cost;
-                    if (g == n) {
-                        cost = dp[i][g - 1] + g;
-                    } else {
-                        cost = g + Math.max(dp[i][g - 1], dp[g + 1][j]);
-                    }
-                    dp[i][j] = Math.min(dp[i][j], cost);
+        for (int end = 2; end <= n; ++end) {
+            for (int start = end - 1; start >= 1; --start) {
+                dp[start][end] = Integer.MAX_VALUE;
+                for (int k = start; k < end; ++k) {
+                    dp[start][end] = Math.min(dp[start][end], Math.max(dp[start][k - 1], dp[k + 1][end]) + k);
                 }
             }
         }
