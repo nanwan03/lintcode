@@ -18,8 +18,8 @@ public class Solution {
         int[][] dp = new int[size][size];
         for (int end = 1; end < size - 1; ++end) {
             for (int start = end; start > 0; --start) {
-                for (int k = end; k >= start; --k) {
-                    dp[start][end] = Math.max(dp[start][end], dp[start][k - 1] + dp[k + 1][end] + helper[start - 1] * helper[k] * helper[end + 1]);
+                for (int k = start; k <= end; ++k) {
+                    dp[start][end] = Math.max(dp[start][end], dp[start][k - 1] + dp[k + 1][end] + helper[start -1] * helper[k] * helper[end + 1]);
                 }
             }
         }
