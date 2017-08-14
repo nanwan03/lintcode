@@ -1,27 +1,27 @@
 public class LFUCache {
-    class Node {
-        public Node prev, next;
-        public final int freq;
-        public LinkedHashSet<Integer> keys = new LinkedHashSet<Integer>();
-
-        public Node(Node prev, Node next, int freq, int key) {
+    private class Node {
+        int freq;
+        Set<Integer> keys = new LinkedHashSet<Integer>();
+        Node prev;
+        Node next;
+        Node(Node prev, Node next, int freq, int key) {
             this.prev = prev;
             this.next = next;
             this.freq = freq;
-            keys.add(key);
+            this.keys.add(key);
         }
     }
-    
-    private Node head = null;
-    private final int capacity;
-    private Map<Integer, Integer> valueMap;
-    private Map<Integer, Node> nodeMap;
+    private int capacity;
+    private Node head = new Node(null, null, 0, -1);
+    private Node tail = new Node(null, null, 0, -1);
+    private Map<Integer, Integer> valueMap = new HashMap<Integer, Integer>();
+    private Map<Integer, Node> nodeMap = new HashMap<Integer, Node>();
     // @param capacity, an integer
     public LFUCache(int capacity) {
         // Write your code here
         this.capacity = capacity;
-        valueMap = new HashMap<Integer, Integer>();
-        nodeMap = new HashMap<Integer, Node>();
+        head.next = tail;
+        tail.prev = head;
     }
 
     // @param key, an integer
@@ -29,36 +29,20 @@ public class LFUCache {
     // @return nothing
     public void set(int key, int value) {
         // Write your code here
-        if (get(key) != -1) {
-            valueMap.put(key, value);
-            return;
-        }
-        
-        if (valueMap.size() == this.capacity) {
-            if (head == null) {
-                return;
+        if (get(key) == -1) {
+            if (valueMap.size() == capacity) {
+                if (head.next == tail) {
+                    return;
+                }
+                int oldest = head.next.keys.iterator().next();
+                valueMap.remove(oldest);
+                nodeMap.remove(oldest);
+                removeKey(oldest, head.next);
             }
-            int oldest = head.keys.iterator().next();
-            head.keys.remove(oldest);
-            if (head.keys.isEmpty()) {
-                removeNode(head);
-            }
-            nodeMap.remove(oldest);
-            valueMap.remove(oldest);
+            addNode(head, head.next, 1, key);
         }
-        
-        if (head == null) {
-            head = new Node(null, null, 1, key);
-        } else if (head.freq == 1) {
-            head.keys.add(key);
-        } else {
-            Node tmp = new Node(null, head, 1, key);
-            head.prev = tmp;
-            head = tmp;
-        }
-        
-        nodeMap.put(key, head);
         valueMap.put(key, value);
+        
     }
 
     public int get(int key) {
@@ -67,33 +51,25 @@ public class LFUCache {
             return -1;
         }
         Node node = nodeMap.get(key);
-        node.keys.remove(key);
-        if (node.next == null) {
-            node.next = new Node(node, null, 1 + node.freq, key);
-        } else if (node.next.freq == node.freq + 1) {
-            node.next.keys.add(key);
-        } else {
-            Node tmp = new Node(node, node.next, node.freq + 1, key);
-            node.next.prev = tmp;
-            node.next = tmp;
-        }
-        nodeMap.put(key, node.next);
-        if (node.keys.isEmpty()) {
-            removeNode(node);
-        }
+        addNode(node, node.next, node.freq + 1, key);
+        removeKey(key, node);
         return valueMap.get(key);
     }
-
-    private void removeNode(Node node) {
-        if (head == node) {
-            head = node.next;
+    private void addNode(Node prev, Node next, int freq, int key) {
+        if (next.freq == prev.freq + 1) {
+            next.keys.add(key);
         } else {
-            node.prev.next = node.next;
+            Node insert = new Node(prev, next, freq, key);
+            insert.next.prev = insert;
+            insert.prev.next = insert;
         }
-        if (node.next != null) {
+        nodeMap.put(key, prev.next);
+    }
+    private void removeKey(int key, Node node) {
+        node.keys.remove(key);
+        if (node.keys.isEmpty()) {
             node.next.prev = node.prev;
+            node.prev.next = node.next;   
         }
-        node.next = null;
-        node.prev = null;
     }
 }
