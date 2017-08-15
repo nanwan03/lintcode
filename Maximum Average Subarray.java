@@ -6,37 +6,39 @@ public class Solution {
      */
     public double maxAverage(int[] nums, int k) {
         // Write your code here
-        double l = Integer.MAX_VALUE, r = Integer.MIN_VALUE;
-        int n = nums.length;
-        for (int i = 0; i < n; ++i) {
-            if (nums[i] < l)
-                l = nums[i];
-            if (nums[i] > r)
-                r = nums[i];
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int size = nums.length;
+        for (int i : nums) {
+            min = Math.min(min, i);
+            max = Math.max(max, i);
         }
-
-        double[] sum = new double[n + 1];
+        return helper(nums, k, (double)min, (double)max);
+    }
+    private double helper(int[] nums, int k, double left, double right) {
+        int size = nums.length;
+        double[] sum = new double[size + 1];
         sum[0] = 0;
-        while (r - l >= 1e-6) {
-            double mid = (l + r) / 2.0;
-
-            double min_pre = 0;
+        while (right - left >= 1e-6) {
+            double mid = (left + right) / 2.0;
+            double prevMin = 0;
             boolean check = false;
-            for (int i = 1; i <= n; ++i) {
+            for (int i = 1; i <= size; ++i) {
                 sum[i] = sum[i - 1] + nums[i - 1] - mid;
-                if (i >= k && sum[i] - min_pre >= 0) {
-                    check = true;
-                    break;
+                if (i >= k) {
+                    prevMin = Math.min(prevMin, sum[i - k]);
+                    if (sum[i] - prevMin >= 0) {
+                        check = true;
+                        break;
+                    }
                 }
-                if (i >= k)
-                    min_pre = Math.min(min_pre, sum[i - k + 1]);
             }
-            if (check)
-                l = mid;
-            else
-                r = mid;
+            if (check) {
+                left = mid;
+            } else {
+                right = mid;
+            }
         }
-
-        return l;
+        return left;
     }
 }
