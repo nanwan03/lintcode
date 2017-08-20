@@ -15,9 +15,6 @@ public class Solution {
             max = Math.max(max, i);
             sum += i;
         }
-        if (k >= pages.length) {
-            return max;
-        }
         return helper(pages, k, max, sum);
     }
     private int helper(int[] pages, int k, int left, int right) {
