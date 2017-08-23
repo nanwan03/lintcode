@@ -10,26 +10,17 @@ public class Solution {
         if (nums == null || nums.length == 0) {
             return rst;
         }
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         int sum = 0;
-        for (int i = 0; i< nums.length; i++) {
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put(0, -1);
+        for (int i = 0; i < nums.length; ++i) {
             sum += nums[i];
-            if (nums[i] == 0) {
-                rst.add(i);
-                rst.add(i);
-                break;
-            } else if (sum == 0) {
-                rst.add(0);
-                rst.add(i);
-                break;
+            if (!map.containsKey(sum)) {
+                map.put(sum, i);
             } else {
-                if (!map.containsKey(sum)) {
-                    map.put(sum, i + 1);
-                } else {
-                    rst.add(map.get(sum));
-                    rst.add(i);
-                    break;
-                }
+                rst.add(map.get(sum) + 1);
+                rst.add(i);
+                return rst;
             }
         }
         return rst;
