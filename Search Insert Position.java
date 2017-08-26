@@ -1,35 +1,32 @@
-import java.util.ArrayList;
-
 public class Solution {
     /** 
      * param A : an integer sorted array
      * param target :  an integer to be inserted
      * return : an integer
      */
-    public int searchInsert(ArrayList<Integer> A, int target) {
+    public int searchInsert(int[] A, int target) {
         // write your code here
-        if (A == null || A.size() == 0) {
+        if (A == null || A.length == 0) {
             return 0;
         }
         int left = 0;
-        int right = A.size() - 1;
+        int right = A.length - 1;
         while (left + 1 < right) {
             int mid = left + (right - left) / 2;
-            if (A.get(mid) == target) {
-                return mid;
-            } else if (A.get(mid) < target) {
-                left = mid;
+            if (A[mid] == target) {
+                right = mid;
+            } else if (A[mid] < target) {
+                left = mid + 1;
             } else {
                 right = mid;
             }
         }
-        if (A.get(right) < target) {
-            return right + 1;
-        } else if (A.get(right) == target || A.get(left) < target) {
+        if (A[left] >= target) {
+            return left;
+        } else if (A[right] >= target) {
             return right;
         } else {
-            return left;
+            return right + 1;
         }
     }
 }
-
