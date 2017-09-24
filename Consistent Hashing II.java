@@ -4,17 +4,17 @@ public class Solution {
      * @param k: a positive integer
      * @return: a Solution object
      */
-    public int n, k;
-    public Set<Integer> ids = null;
-    public Map<Integer, List<Integer>> machines = null;
+    private int n;
+    private int k;
+    private Map<Integer, Integer> machines;
+    public Solution(int n, int k) {
+        this.n = n;
+        this.k = k;
+        this.machines = new HashMap<Integer, Integer>();
+    }
     public static Solution create(int n, int k) {
         // Write your code here
-        Solution solution = new Solution();
-        solution.n = n;
-        solution.k = k;
-        solution.ids = new TreeSet<Integer>();
-        solution.machines = new HashMap<Integer, List<Integer>>();
-        return solution;
+        return new Solution(n, k);
     }
 
     /*
@@ -23,19 +23,18 @@ public class Solution {
      */
     public List<Integer> addMachine(int machine_id) {
         // write your code here
-        Random ra =new Random();
-        List<Integer> random_nums = new ArrayList<Integer>();
+        Random r = new Random();
+        List<Integer> randomL = new ArrayList<Integer>();
         for (int i = 0; i < k; ++i) {
-            int index = ra.nextInt(n);
-            while (ids.contains(index))
-                index = ra.nextInt(n);
-            ids.add(index);
-            random_nums.add(index);
+            int index = r.nextInt(n);
+            while (machines.containsKey(index)) {
+                index = r.nextInt(n);
+            }
+            machines.put(index, machine_id);
+            randomL.add(index);
         }
-
-        Collections.sort(random_nums);
-        machines.put(machine_id, random_nums);
-        return random_nums;
+        Collections.sort(randomL);
+        return randomL;
     }
 
     /*
@@ -44,21 +43,10 @@ public class Solution {
      */
     public int getMachineIdByHashCode(int hashcode) {
         // write your code here
-        int distance = n + 1;
-        int machine_id = 0;
-        for (Map.Entry<Integer, List<Integer>> entry : machines.entrySet()) {
-            int key = entry.getKey();
-            List<Integer> random_nums = entry.getValue();
-            for (Integer num : random_nums) {
-                int d = num - hashcode;
-                if (d < 0)
-                    d += n;
-                if (d < distance) {
-                    distance = d;
-                    machine_id = key;
-                }
-            }
+        int key = hashcode;
+        while (!machines.containsKey(key)) {
+            key = (++key) % n;
         }
-        return machine_id;
+        return machines.get(key);
     }
 }
