@@ -19,10 +19,8 @@ public class InvertedIndex {
             // Output the results into output buffer.
             // Ps. output.collect(String key, int value);
             int id = value.id;
-            StringTokenizer tokenizer = new StringTokenizer(value.content);
-            while (tokenizer.hasMoreTokens()) {
-                String word = tokenizer.nextToken();
-                output.collect(word, id);
+            for (String str : value.content.split("\\s+")) {
+                output.collect(str, id);
             }
         }
     }
@@ -33,16 +31,14 @@ public class InvertedIndex {
             // Write your code here
             // Output the results into output buffer.
             // Ps. output.collect(String key, List<Integer> value);
-            List<Integer> results = new ArrayList<Integer>();
-            int previous = -1;
+            List<Integer> rst = new ArrayList<Integer>();
             while (values.hasNext()) {
-                int now = values.next();
-                if(previous != now) {
-                    results.add(now);
+                int id = values.next();
+                if(rst.size() == 0 || rst.get(rst.size() - 1) != id) {
+                    rst.add(id);
                 }
-                previous = now;
             }
-            output.collect(key, results);
+            output.collect(key, rst);
         }
     }
 }
