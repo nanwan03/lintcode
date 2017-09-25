@@ -15,38 +15,30 @@ public class Solution {
         durationMap.put("h", 3600);
         durationMap.put("d", 86400);
         
-        int start = rate.indexOf("/");
-        int limit = Integer.parseInt(rate.substring(0, start));
-        String type = rate.substring(start + 1, rate.length());
-        int duration = durationMap.get(type);
-        int startTimestamp = timestamp - duration + 1;
+        int index = rate.indexOf("/");
+        int limit = Integer.parseInt(rate.substring(0, index));
+        int duration = durationMap.get(rate.substring(index + 1));
+        int start = timestamp - duration + 1;
         if (!map.containsKey(event)) {
             map.put(event, new ArrayList<Integer>());
         }
-        int count = getCount(map.get(event), startTimestamp);
-        boolean flag = count >= limit;
-        if (increment && !flag) {
+        int count = getCount(map.get(event), start);
+        if (increment && count < limit) {
             map.get(event).add(timestamp);
         }
-        return flag;
+        return count >= limit;
     }
-    
-    public int getCount(List<Integer> event, int target) {
+    private int getCount(List<Integer> list, int target) {
         int left = 0;
-        int right = event.size() - 1;
-        if (left > right || event.get(right) < target) {
-            return 0;
-        }
-        int index = 0;
+        int right = list.size() - 1;
         while (left <= right) {
             int mid = (left + right) >>> 1;
-            if (event.get(mid) >= target) {
-                index = mid;
+            if (list.get(mid) >= target) {
                 right = mid - 1;
             } else {
                 left = mid + 1;
             }
         }
-        return event.size() - index;
+        return list.size() - left;
     }
 }
