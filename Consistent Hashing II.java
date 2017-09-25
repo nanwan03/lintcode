@@ -43,10 +43,9 @@ public class Solution {
      */
     public int getMachineIdByHashCode(int hashcode) {
         // write your code here
-        int key = hashcode;
-        while (!machines.containsKey(key)) {
-            key = (++key) % n;
+        while (!machines.containsKey(hashcode)) {
+            hashcode = (++hashcode) % n;
         }
-        return machines.get(key);
+        return machines.get(hashcode);
     }
 }
