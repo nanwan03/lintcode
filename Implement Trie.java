@@ -5,13 +5,14 @@
  * trie.search("lint"); will return false
  * trie.startsWith("lint"); will return true
  */
+
+
 class TrieNode {
     // Initialize your data structure here.
-    TrieNode[] next;
-    boolean end;
+    Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
+    boolean isEnd = false;
     public TrieNode() {
-        next = new TrieNode[26];
-        end = false;
+        
     }
 }
 
@@ -19,44 +20,54 @@ public class Trie {
     private TrieNode root;
 
     public Trie() {
+        // do intialization if necessary
         root = new TrieNode();
     }
 
-    // Inserts a word into the trie.
+    /*
+     * @param word: a word
+     * @return: nothing
+     */
     public void insert(String word) {
-        TrieNode node = root;
+        // write your code here
+        TrieNode cur = root;
         for (char c : word.toCharArray()) {
-            if (node.next[c - 'a'] == null) {
-                node.next[c - 'a'] = new TrieNode();
+            if (!cur.children.containsKey(c)) {
+                cur.children.put(c, new TrieNode());
             }
-            node = node.next[c - 'a'];
+            cur = cur.children.get(c);
         }
-        node.end = true;
+        cur.isEnd = true;
     }
 
-    // Returns if the word is in the trie.
+    /*
+     * @param word: A string
+     * @return: if the word is in the trie.
+     */
     public boolean search(String word) {
-        TrieNode node = root;
+        // write your code here
+        TrieNode cur = root;
         for (char c : word.toCharArray()) {
-            if (node.next[c - 'a'] != null) {
-                node = node.next[c - 'a'];
-            } else {
+            if (!cur.children.containsKey(c)) {
                 return false;
             }
+            cur = cur.children.get(c);
         }
-        return node.end;
+        return cur.isEnd;
     }
 
-    // Returns if there is any word in the trie
-    // that starts with the given prefix.
+    /*
+     * @param prefix: A string
+     * @return: if there is any word in the trie that starts with the given prefix.
+     */
     public boolean startsWith(String prefix) {
-        TrieNode node = root;
+        // write your code here
+        TrieNode cur = root;
         for (char c : prefix.toCharArray()) {
-            if (node.next[c - 'a'] != null) {
-                node = node.next[c - 'a'];
-            } else {
+            if (!cur.children.containsKey(c)) {
                 return false;
             }
+            cur = cur.children.get(c);
         }
         return true;
     }
