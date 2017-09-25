@@ -4,10 +4,10 @@ public class TinyUrl2 {
      * @param key: a short key
      * @return: a short url starts with http://tiny.url/
      */
-    private static char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-    private static final long L = chars.length;
+    private char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+    private final long L = chars.length;
     private final String tinyURL = "http://tiny.url/";
-    private static long globalID = 0;
+    private long globalID = 0;
     
     private Map<String, String> as2l = new HashMap<String, String>();
     private Map<String, String> al2s = new HashMap<String, String>();
