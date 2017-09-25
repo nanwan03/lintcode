@@ -9,20 +9,20 @@ public class TinyUrl2 {
     private final String tinyURL = "http://tiny.url/";
     private static long globalID = 0;
     
-    private Map<Long, String> id2url = new HashMap<Long, String>();
-    private Map<String, Long> url2id = new HashMap<String, Long>();
-    private Map<String, String> s2l = new HashMap<String, String>();
-    private Map<String, String> l2s = new HashMap<String, String>();
+    private Map<String, String> as2l = new HashMap<String, String>();
+    private Map<String, String> al2s = new HashMap<String, String>();
+    private Map<String, String> cs2l = new HashMap<String, String>();
+    private Map<String, String> cl2s = new HashMap<String, String>();
     public String createCustom(String long_url, String key) {
         // write your code here
         String shortURL = tinyURL + key;
-        if (s2l.containsKey(shortURL) && !s2l.get(shortURL).equals(long_url)) {
+        if (cs2l.containsKey(shortURL) && !cs2l.get(shortURL).equals(long_url)) {
             return "error";
-        } else if (l2s.containsKey(long_url) && !l2s.get(long_url).equals(shortURL)) {
+        } else if (cl2s.containsKey(long_url) && !cl2s.get(long_url).equals(shortURL)) {
             return "error";
         } else {
-            s2l.put(shortURL, long_url);
-            l2s.put(long_url, shortURL);
+            cs2l.put(shortURL, long_url);
+            cl2s.put(long_url, shortURL);
             return shortURL;
         }
     }
@@ -33,15 +33,15 @@ public class TinyUrl2 {
      */
     public String longToShort(String long_url) {
         // write your code here
-        if (l2s.containsKey(long_url)) {
-            return l2s.get(long_url);
-        } else if (url2id.containsKey(long_url)) {
-            return tinyURL + idToKey(url2id.get(long_url));
+        if (cl2s.containsKey(long_url)) {
+            return cl2s.get(long_url);
+        } else if (al2s.containsKey(long_url)) {
+            return al2s.get(long_url);
         } else {
-            String key = idToKey(++globalID);
-            id2url.put(globalID, long_url);
-            url2id.put(long_url, globalID);
-            return tinyURL + key;
+            String shortURL = tinyURL + idToKey(++globalID);
+            as2l.put(shortURL, long_url);
+            al2s.put(long_url, shortURL);
+            return shortURL;
         }
     }
 
@@ -51,30 +51,11 @@ public class TinyUrl2 {
      */
     public String shortToLong(String short_url) {
         // write your code here
-        if (s2l.containsKey(short_url)) {
-            return s2l.get(short_url);
+        if (cs2l.containsKey(short_url)) {
+            return cs2l.get(short_url);
         } else {
-            long id = keyToId(short_url.substring(tinyURL.length()));
-            return id2url.get(id);
+            return as2l.get(short_url);
         }
-    }
-
-    private int toBase62(char c) {
-        if ('a' <= c && c <= 'z') {
-            return c - 'a';
-        } else if ('A' <= c && c <= 'Z') {
-            return c - 'A' + 26;
-        } else {
-            return c - '0' + 52;
-        }
-    }
-    
-    private long keyToId(String shortKey) {
-        long id = 0;
-        for (int i = 0; i < shortKey.length(); ++i) {
-            id = id * L + toBase62(shortKey.charAt(i));
-        }
-        return id;
     }
 
     private String idToKey(long n) {
@@ -84,7 +65,7 @@ public class TinyUrl2 {
             n = n / L;
         }
         while (shortKey.length() < 6) {
-            shortKey.append("a");
+            shortKey.append(chars[0]);
         }
         return shortKey.reverse().toString();
     }
