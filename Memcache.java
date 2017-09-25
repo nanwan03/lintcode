@@ -1,16 +1,16 @@
 public class Memcache {
-    private class Resource {
+    private class Node {
         public int value;
         public int expired;
-        public Resource(int value, int expired) {
+        public Node(int value, int expired) {
             this.value = value;
             this.expired = expired;
         }
     }
-    Map<Integer, Resource> client = null;
+    Map<Integer, Node> client;
     public Memcache() {
         // do intialization if necessary
-        client = new HashMap<Integer, Resource>();
+        client = new HashMap<Integer, Node>();
     }
 
     /*
@@ -20,14 +20,14 @@ public class Memcache {
      */
     public int get(int curtTime, int key) {
         // write your code here
-        if (!client.containsKey(key))
-            return Integer.MAX_VALUE;
+        if (client.containsKey(key)) {
+            Node n = client.get(key);
+            if (n.expired >= curtTime || n.expired == -1) {
+                return n.value;
+            }
+        }
+        return Integer.MAX_VALUE;
 
-        Resource res = client.get(key);
-        if (res.expired >= curtTime || res.expired == -1)
-            return res.value;
-        else
-            return Integer.MAX_VALUE;
     }
 
     /*
@@ -39,12 +39,7 @@ public class Memcache {
      */
     public void set(int curtTime, int key, int value, int ttl) {
         // write your code here
-        int expired;
-        if (ttl == 0)
-            expired = -1;
-        else
-            expired = curtTime + ttl - 1;
-        client.put(key, new Resource(value, expired));
+        client.put(key, new Node(value, ttl == 0 ? -1 : curtTime + ttl - 1));
     }
 
     /*
@@ -54,9 +49,9 @@ public class Memcache {
      */
     public void delete(int curtTime, int key) {
         // write your code here
-        if (!client.containsKey(key))
-            return;
-        client.remove(key);
+        if (client.containsKey(key)) {
+            client.remove(key);
+        }
     }
 
     /*
@@ -67,8 +62,9 @@ public class Memcache {
      */
     public int incr(int curtTime, int key, int delta) {
         // write your code here
-        if (get(curtTime, key) == Integer.MAX_VALUE)
+        if (get(curtTime, key) == Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
+        }
         client.get(key).value += delta;
         return client.get(key).value;
     }
@@ -81,8 +77,9 @@ public class Memcache {
      */
     public int decr(int curtTime, int key, int delta) {
         // write your code here
-        if (get(curtTime, key) == Integer.MAX_VALUE)
+        if (get(curtTime, key) == Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;
+        }
         client.get(key).value -= delta;
         return client.get(key).value;
     }
