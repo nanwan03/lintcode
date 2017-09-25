@@ -4,8 +4,8 @@ public class TinyUrl2 {
      * @param key: a short key
      * @return: a short url starts with http://tiny.url/
      */
-    private char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
-    private final long L = chars.length;
+    private String mask = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private final long L = mask.length();
     private final String tinyURL = "http://tiny.url/";
     private long globalID = 0;
     
@@ -61,11 +61,11 @@ public class TinyUrl2 {
     private String idToKey(long n) {
         StringBuilder shortKey = new StringBuilder();
         while (n > 0) {
-            shortKey.append(chars[(int)(n % L)]);
+            shortKey.append(mask.charAt((int)(n % L)));
             n = n / L;
         }
         while (shortKey.length() < 6) {
-            shortKey.append(chars[0]);
+            shortKey.append(mask.charAt(0));
         }
         return shortKey.reverse().toString();
     }
