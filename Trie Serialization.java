@@ -17,16 +17,15 @@ class Solution {
      */
     public String serialize(TrieNode root) {
         // Write your code here
-        if (root == null)
+        if (root == null) {
             return "";
-
-        StringBuffer sb = new StringBuffer();
+        }
+        StringBuilder sb = new StringBuilder();
         sb.append("<");
         Iterator iter = root.children.entrySet().iterator(); 
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next(); 
-            Character key = (Character)entry.getKey(); 
-            TrieNode child = (TrieNode)entry.getValue();
+        for (Map.Entry<Character, TrieNode> entry : root.children.entrySet()) {
+            Character key = entry.getKey(); 
+            TrieNode child = entry.getValue();
             sb.append(key);
             sb.append(serialize(child));
         }
@@ -43,23 +42,20 @@ class Solution {
      */
     public TrieNode deserialize(String data) {
         // Write your code here
-        if (data == null || data.length() == 0)
+        if (data == null || data.length() == 0) {
             return null;
-
+        }
         TrieNode root = new TrieNode();
-        TrieNode current = root;
-        Stack<TrieNode> path = new Stack<TrieNode>();
+        TrieNode cur = root;
+        Stack<TrieNode> stack = new Stack<TrieNode>();
         for (Character c : data.toCharArray()) {
-            switch (c) {
-            case '<':
-                path.push(current);
-                break;
-            case '>':
-                path.pop();
-                break;
-            default:
-                current = new TrieNode();
-                path.peek().children.put(c, current);
+            if (c == '<') {
+                stack.push(cur);
+            } else if (c == '>') {
+                stack.pop();
+            } else {
+                cur = new TrieNode();
+                stack.peek().children.put(c, cur);
             }
         }
         return root;
