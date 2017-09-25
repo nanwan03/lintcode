@@ -1,34 +1,34 @@
 class HashFunction {
-    public int cap, seed;
-
+    public int cap;
+    public int seed;
     public HashFunction(int cap, int seed) {
         this.cap = cap;
         this.seed = seed;
     }
-
     public int hash(String value) {
-        int ret = 0;
-        int n = value.length();
-        for (int i = 0; i < n; ++i) {
-            ret += seed * ret + value.charAt(i);
-            ret %= cap;
+        int rst = 0;
+        for (int i = 0; i < value.length(); ++i) {
+            rst += seed * rst + value.charAt(i);
+            rst %= cap;
         }
-        return ret;
+        return rst;
     }
 }
 public class CountingBloomFilter {
     public int[] bits;
     public int k;
     public List<HashFunction> hashFunc;
+    private final int M = 100000;
     /*
     * @param k: An integer
     */public CountingBloomFilter(int k) {
         // do intialization if necessary
         this.k = k;
         hashFunc = new ArrayList<HashFunction>();
-        for (int i = 0; i < k; ++i)
-            hashFunc.add(new HashFunction(100000 + i, 2 * i + 3));
-        bits = new int[100000 + k];
+        for (int i = 0; i < k; ++i) {
+            hashFunc.add(new HashFunction(M + i, 2 * i + 3));
+        }
+        bits = new int[M + k];
     }
 
     /*
@@ -38,8 +38,7 @@ public class CountingBloomFilter {
     public void add(String word) {
         // write your code here
         for (int i = 0; i < k; ++i) {
-            int position = hashFunc.get(i).hash(word);
-            bits[position] += 1;
+            bits[getPosition(i, word)] += 1;
         }
     }
 
@@ -50,8 +49,7 @@ public class CountingBloomFilter {
     public void remove(String word) {
         // write your code here
         for (int i = 0; i < k; ++i) {
-            int position = hashFunc.get(i).hash(word);
-            bits[position] -= 1;
+            bits[getPosition(i, word)] -= 1;
         }
     }
 
@@ -62,10 +60,14 @@ public class CountingBloomFilter {
     public boolean contains(String word) {
         // write your code here
         for (int i = 0; i < k; ++i) {
-            int position = hashFunc.get(i).hash(word);
-            if (bits[position] <= 0)
+            if (bits[getPosition(i, word)] <= 0) {
                 return false;
+            }
         }
         return true;
+    }
+    
+    private int getPosition(int index, String word) {
+        return hashFunc.get(index).hash(word);
     }
 }
