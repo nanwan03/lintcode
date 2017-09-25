@@ -18,11 +18,11 @@ public class GFSClient extends BaseGFSClient {
     * @param chunkSize: An integer
     */
     public int chunkSize;
-    public Map<String, Integer> chunkNum;
+    public Map<String, Integer> map;
     public GFSClient(int chunkSize) {
         // do intialization if necessary
         this.chunkSize = chunkSize;
-        this.chunkNum = new HashMap<String, Integer>();
+        this.map = new HashMap<String, Integer>();
     }
 
     /*
@@ -31,15 +31,12 @@ public class GFSClient extends BaseGFSClient {
      */
     public String read(String filename) {
         // write your code here
-        if (!chunkNum.containsKey(filename))
+        if (!map.containsKey(filename)) {
             return null;
-
-        StringBuffer content = new StringBuffer();
-
-        for (int i = 0; i < chunkNum.get(filename); ++i) {
-            String sub_content = readChunk(filename, i);
-            if (sub_content != null)
-                content.append(sub_content);
+        }
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < map.get(filename); ++i) {
+            content.append(readChunk(filename, i));
         }
         return content.toString();
     }
@@ -52,15 +49,12 @@ public class GFSClient extends BaseGFSClient {
     public void write(String filename, String content) {
         // write your code here
         int length = content.length();
-
         int num = (length - 1) / chunkSize + 1;
-        chunkNum.put(filename, num);
-
+        map.put(filename, num);
         for (int i = 0; i < num; ++i) {
             int start = i * chunkSize;
-            int end = i == num -1 ? length : (i + 1) * chunkSize; 
-            String sub_content = content.substring(start, end);
-            writeChunk(filename, i, sub_content);
+            int end = Math.min(length, (i + 1) * chunkSize); 
+            writeChunk(filename, i, content.substring(start, end));
         }
     }
 }
