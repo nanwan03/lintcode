@@ -12,10 +12,10 @@
 
 
 public class MiniCassandra {
-    private Map<String, NavigableMap<Integer, String>> hash;
+    private Map<String, TreeMap<Integer, String>> hash;
     public MiniCassandra() {
         // do intialization if necessary
-        hash = new HashMap<String, NavigableMap<Integer, String>>();
+        hash = new HashMap<String, TreeMap<Integer, String>>();
     }
 
     /*
@@ -26,8 +26,9 @@ public class MiniCassandra {
      */
     public void insert(String raw_key, int column_key, String column_value) {
         // write your code here
-        if (!hash.containsKey(raw_key))
+        if (!hash.containsKey(raw_key)) {
             hash.put(raw_key, new TreeMap<Integer, String>());
+        }
         hash.get(raw_key).put(column_key, column_value);
     }
 
@@ -39,13 +40,14 @@ public class MiniCassandra {
      */
     public List<Column> query(String raw_key, int column_start, int column_end) {
         // write your code here
-        List<Column> rt = new ArrayList<Column>();
-        if (!hash.containsKey(raw_key))
-            return rt;
+        List<Column> rst = new ArrayList<Column>();
+        if (!hash.containsKey(raw_key)) {
+            return rst;
+        }
         for (Map.Entry<Integer, String> entry : 
                 hash.get(raw_key).subMap(column_start, true, column_end, true).entrySet()) {
-            rt.add(new Column(entry.getKey(), entry.getValue()));
+            rst.add(new Column(entry.getKey(), entry.getValue()));
         }
-        return rt;
+        return rst;
     }
 }

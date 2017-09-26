@@ -31,17 +31,27 @@
  *     }
  * };
  */
-class Node {
+class Node implements Comparable<Node> {
     public double distance;
     public Restaurant restaurant;
     public Node(double d, Restaurant r) {
         distance = d;
         restaurant = r;
     }
+    public int compareTo(Node a) {
+        if (this.distance < a.distance) {
+            return -1;
+        } else if (this.distance > a.distance) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
 public class MiniYelp {
-    public NavigableMap<String, Restaurant> restaurants;
+    public TreeMap<String, Restaurant> restaurants;
     public Map<Integer, String> ids;
+    public double[] ERROR = {0.0000186, 0.0001492, 0.0005971, 0.00478, 0.01911, 0.076, 0.61, 2.4, 20, 78, 630, 2500};
     public MiniYelp() {
         // initialize your data structure here.
         ids = new HashMap<Integer, String>();
@@ -54,7 +64,7 @@ public class MiniYelp {
     public int addRestaurant(String name, Location location) {
         // Write your code here
         Restaurant restaurant = Restaurant.create(name, location);
-        String hashcode = GeoHash.encode(location) + "." + restaurant.id;
+        String hashcode = GeoHash.encode(location);
         ids.put(restaurant.id, hashcode);
         restaurants.put(hashcode, restaurant);
         return restaurant.id;
@@ -65,10 +75,8 @@ public class MiniYelp {
         // Write your code here
         if (ids.containsKey(restaurant_id)) {
             String hashcode = ids.get(restaurant_id);
+            restaurants.remove(hashcode);
             ids.remove(restaurant_id);
-            if (restaurants.containsKey(hashcode)) {
-                restaurants.remove(hashcode);
-            }
         }
     }
 
@@ -78,40 +86,29 @@ public class MiniYelp {
     // distance from near to far.
     public List<String> neighbors(Location location, double k) {
         // Write your code here
-        int len = get_length(k);
         String hashcode = GeoHash.encode(location);
-        hashcode = hashcode.substring(0, len);
-
-        List<Node> results = new ArrayList<Node>();
+        hashcode = hashcode.substring(0, getLength(k));
+        List<Node> rst = new ArrayList<Node>();
         for (Map.Entry<String, Restaurant> entry : 
-                restaurants.subMap(hashcode, true, hashcode + "{", true).entrySet()) {
+                restaurants.subMap(hashcode, hashcode + Character.MAX_VALUE).entrySet()) {
             String key = entry.getKey();
             Restaurant value = entry.getValue();
             double distance = Helper.get_distance(location, value.location);
             if (distance <= k)
-                results.add(new Node(distance, value));
+                rst.add(new Node(distance, value));
         }
-        Collections.sort(results, new Comparator<Node>(){  
-            public int compare(Node arg0, Node arg1) {  
-                if (arg0.distance < arg1.distance)
-                    return -1;
-                else if (arg0.distance > arg1.distance)
-                    return 1;
-                else
-                    return 0;
-            }  
-        });
+        Collections.sort(rst);
         List<String> rt = new ArrayList<String>();
-        int n = results.size();
-        for (int i = 0; i < n; ++i)
-            rt.add(results.get(i).restaurant.name);
+        for (int i = 0; i < rst.size(); ++i) {
+            rt.add(rst.get(i).restaurant.name);
+        }
         return rt;
     }
-    int get_length(double k) {
-        double[] ERROR = {2500, 630, 78, 20, 2.4, 0.61, 0.076, 0.01911, 0.00478, 0.0005971, 0.0001492, 0.0000186};
-        for (int i = 0; i < 12; ++i)
-            if (k  > ERROR[i])
-                return i;
-        return 12;
+    int getLength(double k) {
+        int index =  Arrays.binarySearch(ERROR, k);
+        if (index < 0) {
+            index = -(index + 1);
+        }
+        return ERROR.length - index;
     }
 };

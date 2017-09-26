@@ -11,26 +11,19 @@
  * }
  */
 public class MiniTwitter {
-    class Node {
+    class Node implements Comparable<Node> {
         public int order;
         public Tweet tweet;
         public Node(int o, Tweet t) {
             this.order = o;
             this.tweet = t;
         }
+        
+        public int compareTo(Node a) {
+            return a.order - this.order;
+        }
     }
 
-    class SortByOrder implements Comparator {     
-        public int compare(Object obj1,Object obj2) {     
-            Node node1 = (Node) obj1;     
-            Node node2 = (Node) obj2;     
-            if (node1.order < node2.order)
-                return 1;
-            else
-                return -1;
-        }
-    }   
-    
     private Map<Integer, Set<Integer>> friends;
     private Map<Integer, List<Node>> users_tweets;
     private int order;
@@ -71,7 +64,7 @@ public class MiniTwitter {
             }
         }
 
-        Collections.sort(tmp, new SortByOrder());
+        Collections.sort(tmp);
         List<Tweet> rt = new ArrayList<Tweet>();
         tmp = getFirstTen(tmp);
         for (Node node : tmp) {
@@ -89,7 +82,7 @@ public class MiniTwitter {
         if (users_tweets.containsKey(user_id))
             tmp.addAll(getLastTen(users_tweets.get(user_id)));
 
-        Collections.sort(tmp, new SortByOrder());
+        Collections.sort(tmp);
         List<Tweet> rt = new ArrayList<Tweet>();
         tmp = getFirstTen(tmp);
         for (Node node : tmp)
@@ -120,16 +113,10 @@ public class MiniTwitter {
     }
     
     private List<Node> getLastTen(List<Node> tmp) {
-        int last = 10;
-        if (tmp.size() < 10)
-            last = tmp.size();
-        return tmp.subList(tmp.size() - last, tmp.size());
+        return tmp.subList(Math.max(tmp.size() - 10, 0), tmp.size());
     }
 
     private List<Node> getFirstTen(List<Node> tmp) {
-        int last = 10;
-        if (tmp.size() < 10)
-            last = tmp.size();
-        return tmp.subList(0, last);
+        return tmp.subList(0, Math.min(10, tmp.size()));
     }
 }
