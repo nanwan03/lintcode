@@ -4,97 +4,66 @@
  *         // Get all urls from a webpage of given url. 
  * }
 */
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
 import java.lang.Thread;
 import java.net.*;
-import java.io.*;
+import java.util.concurrent.*;
+
 class CrawlerThread extends Thread {
-    private static AtomicLong counter;
     private static BlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-
-    private static HashMap<String, Boolean> mp = new HashMap<String, Boolean>();
-    private static List<String> results = new ArrayList<String>();
-
-    public static void setFirstUrl(String url, int thread_num) {
-        counter = new AtomicLong(thread_num);
-
+    private static Set<String> set = new HashSet<String>();
+    public static void setFirstUrl(String url) {
         try {
             queue.put(url);
         } catch (InterruptedException e) {
             // e.printStackTrace(); 
         }
     }
-    
-    public static Long getCounter() {
-        return counter.get();
-    }
-    
     public static List<String> getResults() {
-        return results;
+        return new ArrayList<String>(set);
     }
-
     @Override
     public void run() {
         while (true) {
-            String url = "";
             try {
-                counter.decrementAndGet();
-                url = queue.take();
-                counter.incrementAndGet();
-            } catch (Exception e) {
-                // e.printStackTrace(); 
-                break;
-            }
-
-            String domain = "";
-            try {
+                String url = queue.take();
                 URL netUrl = new URL(url);
-                domain = netUrl.getHost();
-            } catch (MalformedURLException e) {
-                // e.printStackTrace(); 
-            }
-            if (!mp.containsKey(url) && domain.endsWith("wikipedia.org")) {
-                mp.put(url, true);
-                results.add(url);
-                List<String> urls = HtmlHelper.parseUrls(url);
-                for (String u : urls) {
-                    try {
-                        queue.put(u);
-                    } catch (InterruptedException e) {
-                        // e.printStackTrace(); 
+                String domain = netUrl.getHost();
+                if (domain.endsWith("wikipedia.org") && set.add(url)) {
+                    List<String> urls = HtmlHelper.parseUrls(url);
+                    for (String next : urls) {
+                        queue.put(next);
                     }
                 }
+            } catch (Exception e) {
+                break;
             }
         }
     }
 }
+
 public class Solution {
     /**
      * @param url a url of root page
      * @return all urls
      */
+    private static final int THREAD = 3;
     public List<String> crawler(String url) {
         // Write your code here
-        int thread_num = 7;
-        CrawlerThread.setFirstUrl(url, thread_num);
-
-        CrawlerThread[] thread_pools = new CrawlerThread[thread_num];
-        for (int i = 0; i < thread_num; ++i) {
-            thread_pools[i] = new CrawlerThread();
-            thread_pools[i].start();
+        CrawlerThread.setFirstUrl(url);
+        CrawlerThread[] threadPools = new CrawlerThread[THREAD];
+        for (int i = 0; i < THREAD; ++i) {
+            threadPools[i] = new CrawlerThread();
+            threadPools[i].start();
         }
-        
-        while (CrawlerThread.getCounter() > 0);
-
-        for (int i = 0; i < thread_num; ++i) {
-            thread_pools[i].stop();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e){
+            // e.printStackTrace();
         }
-        
-        List<String> results = CrawlerThread.getResults();
-        return results;
+        for (int i = 0; i < THREAD; ++i) {
+            //thread_pools[i].interrupt();
+            threadPools[i].interrupt();
+        }
+        return CrawlerThread.getResults();
     }
 }
