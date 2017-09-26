@@ -1,70 +1,64 @@
 public class Solution {
-    /**
+    private static class TrieNode {
+        Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
+        boolean isEnd = false;
+        public TrieNode() {
+            
+        }
+    }
+    private TrieNode root = new TrieNode();
+    private int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    /*
      * @param board: A list of lists of character
      * @param words: A list of string
      * @return: A list of string
      */
-    private class Node {
-        Node[] next;
-        boolean end;
-        Node() {
-            next = new Node[26];
-            end = false;
-        }
-        public void insert(String str) {
-            Node node = this;
-            for (char c : str.toCharArray()) {
-                if (node.next[c - 'a'] == null) {
-                    node.next[c - 'a'] = new Node();
-                }
-                node = node.next[c - 'a'];
-            }
-            node.end = true;
-        }
-    }
-    public ArrayList<String> wordSearchII(char[][] board, ArrayList<String> words) {
+    public List<String> wordSearchII(char[][] board, List<String> words) {
         // write your code here
-        ArrayList<String> rst = new ArrayList<String>();
-        if (board == null || board.length == 0) {
+        List<String> rst = new ArrayList<String>();
+        if (board == null || board.length == 0 || words.size() == 0) {
             return rst;
         }
-        Node node = new Node();
         for (String str : words) {
-            node.insert(str);
+            insert(str);
         }
         int row = board.length;
         int col = board[0].length;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                char c = board[i][j];
-                if (node.next[c - 'a'] != null) {
-                    BFS(node, board, i, j, sb, rst);
-                }
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                helper(rst, new StringBuilder(), root, board, i, j, row, col);
             }
         }
         return rst;
     }
-    private void BFS(Node node, char[][] board, int i, int j, StringBuilder sb, List<String> rst) {
-        int row = board.length;
-        int col = board[0].length;
-        if (i < 0 || i >= row || j < 0 || j >= col || board[i][j] == '.' || node.next[board[i][j] - 'a'] == null) {
-            return;
+    private void insert(String word) {
+        TrieNode cur = root;
+        for (char c : word.toCharArray()) {
+            if (!cur.children.containsKey(c)) {
+                cur.children.put(c, new TrieNode());
+            }
+            cur = cur.children.get(c);
         }
-        char c = board[i][j];
-        sb.append(c);
-        board[i][j] = '.';
-        node = node.next[c - 'a'];
-        if (node.end == true) {
+        cur.isEnd = true;
+    }
+    private void helper(List<String> rst, StringBuilder sb, TrieNode cur, char[][] board, int x, int y, int row, int col) {
+        if (cur.isEnd) {
             if (!rst.contains(sb.toString())) {
                 rst.add(sb.toString());
             }
         }
-        BFS(node, board, i + 1, j, sb, rst);
-        BFS(node, board, i - 1, j, sb, rst);
-        BFS(node, board, i, j + 1, sb, rst);
-        BFS(node, board, i, j - 1, sb, rst);
-        board[i][j] = c;
+        if (x < 0 || x >= row || y < 0 || y >= col || cur.children.isEmpty() || !cur.children.containsKey(board[x][y])) {
+            return;
+        }
+        char c = board[x][y];
+        board[x][y] = '.';
+        sb.append(c);
+        for (int[] dir : dirs) {
+            int nx = x + dir[0];
+            int ny = y + dir[1];
+            helper(rst, sb, cur.children.get(c), board, nx, ny, row, col);
+        } 
         sb.deleteCharAt(sb.length() - 1);
+        board[x][y] = c;
     }
 }
