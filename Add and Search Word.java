@@ -1,63 +1,57 @@
-import java.util.*;
-
-class TrieNode {
-    TrieNode[] next;
-    boolean end;
-    // Initialize your data structure here.
-    public TrieNode() {
-        next = new TrieNode[26];
-        end = false;
-    }
-}
-
 public class WordDictionary {
-    private TrieNode root;
-    public WordDictionary() {
-        root = new TrieNode();
-    }
-    // Adds a word into the data structure.
-    public void addWord(String word) {
-        // Write your code here
-        TrieNode node = root;
-    	for (char c : word.toCharArray()) {
-            if (node.next[c - 'a'] == null) {
-                node.next[c - 'a'] = new TrieNode();
-            }
-            node = node.next[c - 'a'];
+    private static class TrieNode {
+        Map<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
+        boolean isEnd = false;
+        public TrieNode() {
+            
         }
-        node.end = true;
+    }
+    /*
+     * @param word: Adds a word into the data structure.
+     * @return: nothing
+     */
+    private TrieNode root = new TrieNode();
+    public void addWord(String word) {
+        // write your code here
+        TrieNode cur = root;
+        for (char c : word.toCharArray()) {
+            if (!cur.children.containsKey(c)) {
+                cur.children.put(c, new TrieNode());
+            }
+            cur = cur.children.get(c);
+        }
+        cur.isEnd = true;
     }
 
-    // Returns if the word is in the data structure. A word could
-    // contain the dot character '.' to represent any one letter.
+    /*
+     * @param word: A word could contain the dot character '.' to represent any one letter.
+     * @return: if the word is in the data structure.
+     */
     public boolean search(String word) {
-        // Write your code here
-        return search(word, 0, root);
+        // write your code here
+        return search(root, word, 0);
     }
-    private boolean search(String word, int wordIndex, TrieNode node) {
-    	if (node == null) {
-    		return false;
-    	}
-    	if (wordIndex == word.length()) {
-    		return node.end;
-    	}
-    	if (word.charAt(wordIndex) == '.') {
-    		for (TrieNode next : node.next) {
-    			if (next != null) {
-	    			boolean flag = search(word, wordIndex + 1, next);
-	    			if (flag) {
-	    				return true;
-	    			}
-    			}
-    		}
-    	} else {
-    		if (node.next[word.charAt(wordIndex) - 'a'] != null) {
-    			return search(word, wordIndex + 1, node.next[word.charAt(wordIndex) - 'a']);
-    		}
-    	}
-    	return false;
+    private boolean search(TrieNode cur, String word, int index) {
+        if (index == word.length()) {
+            return cur.isEnd;
+        }
+        char c = word.charAt(index);
+        if (c == '.') {
+            for (TrieNode next : cur.children.values()) {
+                if (search(next, word, index + 1)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            if (!cur.children.containsKey(c)) {
+                return false;
+            }
+            return search(cur.children.get(c), word, index + 1);
+        }
     }
 }
+
 
 // Your WordDictionary object will be instantiated and called as such:
 // WordDictionary wordDictionary = new WordDictionary();
