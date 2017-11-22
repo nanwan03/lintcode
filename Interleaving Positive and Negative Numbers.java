@@ -1,38 +1,50 @@
-class Solution {
-    /**
+public class Solution {
+    /*
      * @param A: An integer array.
-     * @return an integer array
+     * @return: nothing
      */
-    public int[] rerange(int[] A) {
+    public void rerange(int[] A) {
+        // write your code here
         if (A == null || A.length == 0) {
-        	return A;
+            return;
         }
-        int left = 0;
-        int right = A.length - 1;
-        int cur = 0;
-        
+        int next = -1;
         int posNum = 0;
         int negNum = 0;
-        while (cur <= right) {
-        	if (A[cur] < 0) {
-        		swap(A, cur++, left++);
-        		negNum++;
-        	} else {
-        		swap(A, cur, right--);
-        		posNum++; 
-        	}
+        for (int i : A) {
+            if (i < 0) {
+                negNum++;
+            } else {
+                posNum++;
+            }
         }
-        int posIndex = left;
-        int negIndex = posNum >= negNum ? 0 : 1;
-        while (posIndex < A.length && negIndex < posIndex) {
-        	swap(A, posIndex++, negIndex);
-        	negIndex += 2;
+        boolean flag = posNum < negNum;
+        for (int i = 0; i < A.length; ++i) {
+            if (helper(flag, A, i)) {
+                next = Math.max(next, i + 1);
+                for(; next < A.length; ++next) {
+                    if (A[next] * A[i] < 0) {
+                        break;
+                    }
+                }
+                if (next < A.length) {
+                    rightShift(A, i++, next++);
+                }
+            }
         }
-        return A;
-   }
-    private void swap(int[] A, int i, int j) {
-    	int temp = A[i];
-    	A[i] = A[j];
-    	A[j] = temp;
+    }
+    private boolean helper(boolean flag, int[] A, int index) {
+        if (!flag) {
+            return (index % 2 == 0 && A[index] < 0) || (index % 2 == 1 && A[index] > 0);
+        } else {
+            return (index % 2 == 1 && A[index] < 0) || (index % 2 == 0 && A[index] > 0);
+        }
+    }
+    private void rightShift(int[] A, int left, int right) {
+        int temp = A[right];
+        for (int i = right; i > left; --i) {
+            A[i] = A[i - 1];
+        }
+        A[left]  = temp;
     }
 }
