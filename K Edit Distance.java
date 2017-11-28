@@ -6,71 +6,59 @@ public class Solution {
      * @return: output all the strings that meet the requirements
      */
     private static class TrieNode {
-        // Initialize your data structure here.
-        public TrieNode[] children;
-        public boolean hasWord;
-        public String str;
-        
-        // Initialize your data structure here.
+        TreeMap<Character, TrieNode> children = new TreeMap<Character, TrieNode>();
+        boolean isEnd = false;
         public TrieNode() {
-            children = new TrieNode[26];
-            for (int i = 0; i < 26; ++i)
-                children[i] = null;
-            hasWord = false;
-        }
-    
-        // Adds a word into the data structure.
-        static public void addWord(TrieNode root, String word) {
-            TrieNode now = root;
-            for(int i = 0; i < word.length(); i++) {
-                Character c = word.charAt(i);
-                if (now.children[c - 'a'] == null) {
-                    now.children[c - 'a'] = new TrieNode();
-                }
-                now = now.children[c - 'a'];
-            }
-            now.str = word;
-            now.hasWord = true;
+            
         }
     }
+    private TrieNode root = new TrieNode();
     public List<String> kDistance(String[] words, String target, int k) {
         // write your code here
-        TrieNode root = new TrieNode();
-        for (int i = 0; i < words.length; i++)
-            TrieNode.addWord(root, words[i]);
-
-        List<String> result = new ArrayList<String>();
-
-        int n = target.length();
-        int[] dp = new int[n + 1];
-        for (int i = 0; i <= n; ++i)
-            dp[i] = i;
-
-        find(root, result, k, target, dp);
-        return result;
-    }
-    public void find(TrieNode node, List<String> result, int k, String target, int[] dp) {
-        int n = target.length();
-        // dp[i] 表示从Trie的root节点走到当前node节点，形成的Prefix
-        // 和 target的前i个字符的最小编辑距离
-        if (node.hasWord && dp[n] <= k) {
-            result.add(node.str);
+        List<String> rst = new ArrayList<String>();
+        if (words == null || words.length == 0) {
+            return rst;
         }
-        int[] next = new int[n + 1];
-        for (int i = 0; i <= n; ++i)
-            next[i] = 0;
-
-        for (int i = 0; i < 26; ++i)
-            if (node.children[i] != null) {
+        for (String str : words) {
+            insert(str);
+        }
+        int[] dp = new int[target.length() + 1];
+        for (int i = 1; i < dp.length; ++i) {
+            dp[i] = i;
+        }
+        helper(root, rst, k, target, dp, new StringBuilder());
+        return rst;
+    }
+    private void insert(String str) {
+        TrieNode cur = root;
+        for (char c : str.toCharArray()) {
+            if (!cur.children.containsKey(c)) {
+                cur.children.put(c, new TrieNode());
+            }
+            cur = cur.children.get(c);
+        }
+        cur.isEnd = true;
+    }
+    private void helper(TrieNode cur, List<String> rst, int k, String target, int[] dp, StringBuilder sb) {
+        int size = target.length();
+        if (cur.isEnd && dp[size] <= k) {
+            rst.add(sb.toString());
+        }
+        int[] next = new int[size + 1];
+        for (char c = 'a'; c <= 'z'; ++c) {
+            if (cur.children.containsKey(c)) {
                 next[0] = dp[0] + 1;
-                for (int j = 1; j <= n; j++) {
-                    if (target.charAt(j - 1) - 'a' == i) {
-                        next[j] = Math.min(dp[j - 1], Math.min(next[j - 1] + 1, dp[j] + 1));
+                for (int i = 1; i <= target.length(); ++i) {
+                    if (target.charAt(i - 1) == c) {
+                        next[i] = Math.min(dp[i - 1], Math.min(next[i - 1] + 1, dp[i] + 1));
                     } else {
-                        next[j] = Math.min(dp[j - 1] + 1, Math.min(next[j - 1] + 1, dp[j] + 1));
+                        next[i] = Math.min(dp[i - 1] + 1, Math.min(next[i - 1] + 1, dp[i] + 1));
                     }
                 }
-                find(node.children[i], result, k, target, next);
+                sb.append(c);
+                helper(cur.children.get(c), rst, k, target, next, sb);
+                sb.deleteCharAt(sb.length() - 1);
             }
+        }
     }
 }
