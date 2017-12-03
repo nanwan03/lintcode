@@ -33,7 +33,7 @@ public class Solution {
             return 0;
         }
         int rst = 1;
-        for (int k = Math.min(posNum, negNum); k >= 2; --k) {
+        for (int k = Math.min(posNum, negNum); k >= 2; --k) { //check if list can be partitioned into k subsets and each subset's sum equal to zero
             int[] subset = new int[k];
             Arrays.fill(subset, -1);
             if (partition(list, subset, new boolean[list.size()], k, 0, list.size() - 1)) {
