@@ -13,14 +13,8 @@ public class Solution {
             int u = e[0];
             int v = e[1];
             int w = e[2];
-            if (!map.containsKey(u)) {
-                map.put(u, 0);
-            }
-            map.put(u, map.get(u) - w);
-            if (!map.containsKey(v)) {
-                map.put(v, 0);
-            }
-            map.put(v, map.get(v) + w);
+            map.put(u, map.getOrDefault(u, 0) - w);
+            map.put(v, map.getOrDefault(v, 0) + w);
         }
         List<Integer> list = new ArrayList<Integer>();
         int posNum = 0;
@@ -38,19 +32,19 @@ public class Solution {
         if (list.size() == 0) {
             return 0;
         }
-        Collections.sort(list);
         int rst = 1;
-        for (int k = 2; k <= Math.min(posNum, negNum); ++k) {  //check if list can be partitioned into k subsets and each subset's sum equals to zero
+        for (int k = Math.min(posNum, negNum); k >= 2; --k) {
             int[] subset = new int[k];
             Arrays.fill(subset, -1);
             if (partition(list, subset, new boolean[list.size()], k, 0, list.size() - 1)) {
                 rst = k;
+                break;
             }
         }
         return list.size() - rst;
     }
     private boolean partition(List<Integer> list, int[] subset, boolean[] used, int k, int curIndex, int limitIndex) {
-    	if (limitIndex == 0) {
+    	if (curIndex == subset.length) {
     		for (int i = 0; i < subset.length; ++i) {
     			if (subset[i] != 0) {
     				return false;
