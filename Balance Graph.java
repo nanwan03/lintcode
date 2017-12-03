@@ -32,16 +32,19 @@ public class Solution {
         if (list.size() == 0) {
             return 0;
         }
-        int rst = 1;
-        for (int k = Math.min(posNum, negNum); k >= 2; --k) { //check if list can be partitioned into k subsets and each subset's sum equal to zero
-            int[] subset = new int[k];
+        int left = 2;
+        int right = Math.min(posNum, negNum);
+        while (left <= right) {        //binary search to find the maximum number of subsets from list and subset's sum equals to zero
+            int mid = (left + right) >>> 1;
+            int[] subset = new int[mid];
             Arrays.fill(subset, -1);
-            if (partition(list, subset, new boolean[list.size()], k, 0, list.size() - 1)) {
-                rst = k;
-                break;
+            if (partition(list, subset, new boolean[list.size()], mid, 0, list.size() - 1)) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
             }
         }
-        return list.size() - rst;
+        return list.size() - right;
     }
     private boolean partition(List<Integer> list, int[] subset, boolean[] used, int k, int curIndex, int limitIndex) {
     	if (curIndex == subset.length) {
