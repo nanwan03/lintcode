@@ -32,7 +32,7 @@ public class Solution {
         if (list.size() == 0) {
             return 0;
         }
-        int left = 2;
+        int left = 1;
         int right = Math.min(posNum, negNum);
         while (left <= right) {        //binary search to find the maximum number of subsets from list and subset's sum equals to zero
             int mid = (left + right) >>> 1;
