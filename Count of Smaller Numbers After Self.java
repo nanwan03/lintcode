@@ -2,12 +2,12 @@ public class Solution {
     static class segmentTreeNode {
         int start, end, count;
         segmentTreeNode left, right;
-        segmentTreeNode(int start, int end, int count) {
+        segmentTreeNode(int start, int end) {
             this.start = start;
             this.end = end;
-            this.count = count;
             left = null;
             right = null;
+            this.count = 0;
         }
     }
     public static List<Integer> countSmaller(int[] nums) {
@@ -36,23 +36,30 @@ public class Solution {
         return rst;
     }
     public static segmentTreeNode build(int start, int end) {
-        if (start > end) return null;
-        if (start == end) return new segmentTreeNode(start, end, 0);
-        int mid = (start + end) / 2;
-        segmentTreeNode root = new segmentTreeNode(start, end, 0);
+        if (start > end) {
+            return null;
+        }
+        segmentTreeNode root = new segmentTreeNode(start, end);
+        if (start == end) {
+            return root;
+        }
+        int mid = (start + end) >>> 1;
         root.left = build(start, mid);
         root.right = build(mid + 1, end);
-        root.count = root.left.count + root.right.count;
         return root;
     }
 
     public static int query(segmentTreeNode root, int start, int end) {
-        if (root == null) return 0;
-        if (root.start == start && root.end == end) return root.count;
-        int mid = (root.start + root.end) / 2;
-        if (end < mid) {
+        if (root == null) {
+            return 0;
+        }
+        if (start <= root.start && root.end <= end) {
+            return root.count;
+        }
+        int mid = (root.start + root.end) >>> 1;
+        if (end <= mid) {
             return query(root.left, start, end);
-        } else if (start > end) {
+        } else if (start >= mid + 1) {
             return query(root.right, start, end);
         } else {
             return query(root.left, start, mid) + query(root.right, mid + 1, end);
