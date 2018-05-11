@@ -19,6 +19,9 @@ public class Solution {
         if (k == 1) {
             return true;
         }
+        if (curSum > target) { // nums[i] > 0
+            return false;
+        }
         if (curSum == target && curNum > 0) {
             return helper(nums, isused, 0, k-1, 0, 0, target);
         }
