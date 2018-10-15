@@ -32,37 +32,40 @@ public class Solution {
         if (list.size() == 0) {
             return 0;
         }
-        int left = 1;
+        int size = list.size();
+        int left = 0;
         int right = Math.min(posNum, negNum);
-        while(left + 1 < right) {
+        while (left + 1 < right) {
             int mid = (left + right) >>> 1;
-            if (isValid(list, new boolean[list.size()], 0, mid, 0, 0, 0)) {
+            if (isValid(list, new boolean[size], 0, mid, 0, 0, 0)) {
                 left = mid;
             } else {
                 right = mid - 1;
             }
         }
-        if (isValid(list, new boolean[list.size()], 0, right, 0, 0, 0)) {
+        if (isValid(list, new boolean[size], 0, right, 0, 0, 0)) {
             return list.size() - right;
         }
-        if (isValid(list, new boolean[list.size()], 0, left, 0, 0, 0)) {
+        if (isValid(list, new boolean[size], 0, left, 0, 0, 0)) {
             return list.size() - left;
         }
         return list.size() - 1;
     }
-    private boolean isValid(List<Integer> nums, boolean[] isused, int startIndex, int k, int curSum, int curNum, int target) {
+    private boolean isValid(List<Integer> list, boolean[] isused, int start, int k, int curSum, int curNum, int usedNum) {
         if (k == 1) {
-            return true;
+            return usedNum != isused.length;
         }
-        if (curSum == target && curNum > 0) {
-            return isValid(nums, isused, 0, k-1, 0, 0, target);
+        if (curSum == 0 && curNum > 0) {
+            return isValid(list, isused, 0, k - 1, 0, 0, usedNum);
         }
-        for (int i = startIndex; i < nums.size(); ++i){
+        for (int i = start; i < list.size(); ++i) {
             if (!isused[i]) {
                 isused[i] = true;
-                if (isValid(nums, isused, i + 1, k, curSum + nums.get(i), curNum++, target)) {
+                //System.out.println(curNum);
+                if (isValid(list, isused, i + 1, k, curSum + list.get(i), curNum + 1, usedNum + 1)) {
                     return true;
                 }
+                //System.out.println(curNum);
                 isused[i] = false;
             }
         }
